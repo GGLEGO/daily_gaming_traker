@@ -103,6 +103,8 @@ async function runAgent(spec) {
     log(game, `신규 패치 ${fresh.length}건 (이번 실행에서 ${toFetch.length}건 상세 수집)`);
 
     const events = [];
+    // 저장소에 있는 가장 최근 게시 시각. 이보다 오래된 글은 과거분 채우기(backfill)라 "신규"로 알리지 않는다.
+    const newestKnown = store.items.reduce((m, it) => Math.max(m, new Date(it.publishedAt || 0).getTime() || 0), 0);
     let added = 0;
     for (const item of toFetch) {
       try {
@@ -114,8 +116,10 @@ async function runAgent(spec) {
         merged.contentHash = harness.hashText(textOf(merged.html));
         store.items.push(merged);
         added += 1;
-        events.push(harness.event('new', game, { id: merged.id, title: merged.title, url: merged.url, publishedAt: merged.publishedAt }));
-        log(game, `추가: ${merged.title}`);
+        const published = new Date(merged.publishedAt || 0).getTime() || 0;
+        const kind = newestKnown && published && published < newestKnown ? 'backfill' : 'new';
+        events.push(harness.event(kind, game, { id: merged.id, title: merged.title, url: merged.url, publishedAt: merged.publishedAt }));
+        log(game, `${kind === 'backfill' ? '과거분 추가' : '추가'}: ${merged.title}`);
       } catch (e) {
         log(game, `상세 수집 실패 (${item.title}): ${e.message}`);
       }

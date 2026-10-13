@@ -73,7 +73,7 @@ scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리�
 | `GET /api/games` | 게임 목록과 각 게임의 최신 패치 (장르 포함) |
 | `GET /api/genres` | 장르 목록(FPS / RPG / AOS / 스포츠)과 소속 게임 |
 | `GET /api/status` | 스케줄러 및 게임별 수집 상태 (신규 수 `newCount`, 수정 반영 수 `updatedCount`) |
-| `GET /api/changes?limit=30&type=updated&since=ISO` | 최근 변경 이벤트 (신규 패치 / 원문 수정 반영 / 수집 오류) |
+| `GET /api/changes?limit=30&type=updated&since=ISO` | 최근 변경 이벤트 (type: new 신규 패치 / updated 원문 수정 반영 / backfill 과거분 채우기 / error 수집 오류) |
 | `GET /api/:game/patches` | 패치 목록 (본문 제외) |
 | `GET /api/:game/patches/latest` | 최신 패치 전문 |
 | `GET /api/:game/patches/:id` | 특정 패치 전문 |
@@ -90,19 +90,27 @@ scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리�
 
 ## 새 게임 추가하기
 
-**이미 다루는 회사의 게임이면** 그 회사 폴더의  에  하나만 추가합니다. 등록부가 자동으로 읽습니다.
+**이미 다루는 회사의 게임이면** 그 회사 폴더의 `data/` 에 `<게임>.js` 하나만 추가합니다. 등록부가 자동으로 읽습니다.
 
-\/ko-kr/news/tags/patch-notes/\
+```js
+// game/riot/data/lor.js (예시)
+const base = 'https://playruneterra.com';
+module.exports = {
+  game: 'lor', name: 'Legends of Runeterra', label: 'LoR', short: 'LoR',
+  tagline: '레전드 오브 룬테라 패치 노트', genre: 'aos',
+  base, sourceUrl: `${base}/ko-kr/news/tags/patch-notes/`, titleFilter: /패치|patch/i,
+};
+```
 
-**새 회사면**  와  를 만듭니다.
+**새 회사면** `game/<회사>/agents.js` 와 `game/<회사>/data/<게임>.js` 를 만듭니다.
 
-1.  는  의  로  를 읽고, 게임 데이터마다  를 호출해
-    를 내보냅니다. 끝에  를 두면 단독 실행이 됩니다.
-   -  는  목록을 돌려줍니다.  는 바뀌지 않는 값이어야 합니다.
-   -  은  를 돌려줍니다.
-2. 게임 데이터에는  이 반드시 있어야 하고(fps / rpg / aos / sports), 나머지는 회사 파서가 쓰는 값입니다.
-   새 장르는  의  에, 회사 표시 순서는 같은 파일의  에 추가합니다.
-3. 네비게이션 버튼과 홈 카드는  를 읽어 자동으로 생깁니다. 배지 색만  의  에 추가하면 됩니다.
+1. `agents.js` 는 `require('../../base')` 의 `loadGameData` 로 `data/` 를 읽고, 게임 데이터마다 `defineAgent(data, { listPatches, fetchDetail })` 를 호출해
+   `module.exports = { company: '회사 이름', agents }` 를 내보냅니다. 끝에 `if (require.main === module) runCli(agents);` 를 두면 단독 실행이 됩니다.
+   - `listPatches()` 는 `[{ id, title, url, publishedAt, summary, image, html? }]` 목록을 돌려줍니다. `id` 는 바뀌지 않는 값이어야 합니다.
+   - `fetchDetail(item)` 은 `{ html, image?, publishedAt?, summary?, title? }` 를 돌려줍니다.
+2. 게임 데이터에는 `game, name, short, tagline, genre, sourceUrl` 이 반드시 있어야 하고(fps / rpg / aos / sports), 나머지는 회사 파서가 쓰는 값입니다.
+   새 장르는 `game/index.js` 의 `GENRES` 에, 회사 표시 순서는 같은 파일의 `COMPANY_ORDER` 에 추가합니다.
+3. 네비게이션 버튼과 홈 카드는 `/api/games` 를 읽어 자동으로 생깁니다. 배지 색만 `public/style.css` 의 `.badge-<game>` 에 추가하면 됩니다.
 
 ## 참고
 

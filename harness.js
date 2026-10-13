@@ -79,7 +79,11 @@ function recordEvents(events) {
   fs.renameSync(tmp, CHANGES_PATH);
 }
 
-// 이벤트 생성 도우미: type = new | updated | error
+// 이벤트 생성 도우미: type = new | backfill | updated | error
+//  new      새로 올라온 글 (저장소의 최신 게시 시각보다 새 글)
+//  backfill 저장소를 채우기 위해 가져온 과거 글 (피드에는 표시하지 않음)
+//  updated  원문이 수정되어 본문/제목을 교체한 글
+//  error    에이전트 실행 실패
 function event(type, game, extra = {}) {
   return { at: new Date().toISOString(), type, game, ...extra };
 }

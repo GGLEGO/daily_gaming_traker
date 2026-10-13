@@ -344,7 +344,7 @@
     if (!sec) return;
     try {
       const data = await getJSON('/api/changes?limit=12');
-      const events = data.events.filter((e) => e.type !== 'error');
+      const events = data.events.filter((e) => e.type === 'new' || e.type === 'updated');
       if (!events.length) return;
       sec.hidden = false;
       $('#changes-list').innerHTML = events.map((e) => `
