@@ -85,6 +85,7 @@
   // ---------- Steam 할인 배너 (슬라이드) ----------
   // 할인 종료 표시: "할인 종료 10월 15일 (목) 까지 · 3일 남음"
   function dealEnds(d) {
+    const what = d.free ? '무료 배포 종료' : '할인 종료';
     if (d.discountEndsAt) {
       const end = new Date(d.discountEndsAt);
       if (!isNaN(end)) {
@@ -92,11 +93,11 @@
         const days = Math.floor(left / 86400e3), hours = Math.floor((left % 86400e3) / 3600e3);
         const remain = left <= 0 ? '곧 종료' : days >= 1 ? `${days}일 ${hours}시간 남음` : `${Math.max(hours, 1)}시간 남음`;
         const when = end.toLocaleString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Seoul' });
-        return `⏳ 할인 종료 <strong>${esc(when)}</strong> 까지 · ${esc(remain)}`;
+        return `⏳ ${what} <strong>${esc(when)}</strong> 까지 · ${esc(remain)}`;
       }
     }
     if (d.discountEndsText) return `⏳ ${esc(d.discountEndsText)}`;
-    return '⏳ 할인 종료일 미정 (상점 페이지에서 확인)';
+    return `⏳ ${what}일 미정 (상점 페이지에서 확인)`;
   }
 
   async function renderDeals() {
@@ -106,7 +107,7 @@
     try { data = await getJSON('/api/deals'); } catch (e) { return; }
     // 장르별(FPS / RPG / AOS / 스포츠) 할인율 상위 5개. 옛 형식(items 만 있음)도 한 탭으로 보여준다
     const genres = (data.genres && data.genres.length ? data.genres : [{ id: 'all', label: '전체', items: data.items || [] }])
-      .map((g) => ({ ...g, items: (g.items || []).slice(0, 5) }))
+      .map((g) => ({ ...g, items: (g.items || []).slice(0, g.free ? 8 : 5) }))
       .filter((g) => g.items.length);
     if (!genres.length) return;
     const track = $('#deals-track');
@@ -115,14 +116,17 @@
     $('#deals-updated').textContent = data.updatedAt ? `갱신 ${relTime(data.updatedAt)}` : '';
     box.hidden = false;
 
+    // 무료 배포(100% 할인) 항목은 배지·가격·문구를 "무료"로 보여주고, DLC 면 본편 이름을 함께 표시한다
+    const isFree = (d) => d.free || d.discount >= 100;
+    const typeTag = (d) => (d.type && d.type !== 'game' ? `<span class="deal-type">${esc(d.typeLabel || d.type)}${d.parentName ? ` · ${esc(d.parentName)}` : ''}</span>` : '');
     const slide = (d, i, g) => `
-      <a class="deal" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">
-        <div class="deal-media"><img src="${esc(d.image)}" alt="" loading="${i === 0 ? 'eager' : 'lazy'}"${d.capsule ? ` onerror="this.onerror=null;this.src='${esc(d.capsule)}'"` : ''}><span class="deal-pct">-${d.discount}%</span></div>
+      <a class="deal${isFree(d) ? ' deal-free' : ''}" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">
+        <div class="deal-media"><img src="${esc(d.image)}" alt="" loading="${i === 0 ? 'eager' : 'lazy'}"${d.capsule ? ` onerror="this.onerror=null;this.src='${esc(d.capsule)}'"` : ''}><span class="deal-pct">${isFree(d) ? '무료' : `-${d.discount}%`}</span></div>
         <div class="deal-body">
-          <span class="deal-rank">${esc(g.label)} 할인율 ${i + 1}위 · STEAM 할인 중</span>
+          <span class="deal-rank">${g.free ? `무료 배포 ${i + 1} · STEAM 한정 기간 100% 할인` : `${esc(g.label)} 할인율 ${i + 1}위 · STEAM 할인 중`}</span>
           <span class="deal-name">${esc(d.name)}</span>
-          <span class="deal-prices"><span class="deal-original">${esc(d.originalPrice)}</span><span class="deal-final">${esc(d.finalPrice)}</span></span>
-          <span class="deal-meta">${d.reviewText ? `<span class="deal-review-${esc(d.review || 'mixed')}">${esc(d.reviewText)}</span>` : ''}${d.released ? `<span>출시 ${esc(d.released)}</span>` : ''}</span>
+          <span class="deal-prices"><span class="deal-original">${esc(d.originalPrice)}</span><span class="deal-final">${isFree(d) ? '무료' : esc(d.finalPrice)}</span>${isFree(d) ? '<span class="deal-keep">지금 받으면 영구 소장</span>' : ''}</span>
+          <span class="deal-meta">${typeTag(d)}${d.reviewText ? `<span class="deal-review-${esc(d.review || 'mixed')}">${esc(d.reviewText)}</span>` : ''}${d.released ? `<span>출시 ${esc(d.released)}</span>` : ''}</span>
           <span class="deal-ends">${dealEnds(d)}</span>
           <span class="deal-players">${typeof d.players === 'number' ? `👥 지금 접속 중 <strong>${d.players.toLocaleString('ko-KR')}</strong>명` : '👥 접속자 수 집계 불가'}</span>
           <span class="deal-cta">Steam 상점에서 보기 ↗</span>
@@ -153,7 +157,7 @@
       play();
     };
     if (tabs) {
-      tabs.innerHTML = genres.map((g) => `<button class="deals-genre" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
+      tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
       tabs.addEventListener('click', (ev) => { const t = ev.target.closest('.deals-genre'); if (t) showGenre(t.dataset.genre); });
     }
     box.querySelector('.deals-prev').addEventListener('click', () => { go(idx - 1); play(); });

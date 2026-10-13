@@ -1,5 +1,6 @@
 // Steam 할인 게임 수집기 (게임 패치 에이전트와 별도)
 // 원본: Steam 상점 검색 - 장르 태그별로 할인 중(specials=1)인 인기 게임을 받아, 장르마다 할인율이 높은 순으로 상위 N개를 저장한다.
+// 여기에 100% 할인으로 무료 배포 중인 항목(maxprice=free)을 "무료 배포" 탭으로 함께 저장한다.
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
@@ -20,6 +21,11 @@ const GENRES = [
 function searchUrl(tag) {
   return `https://store.steampowered.com/search/results/?query&start=0&count=50&specials=1&tags=${tag}&filter=topsellers&infinite=1&cc=kr&l=koreana`;
 }
+
+// 무료 배포(100% 할인): 할인 중(specials=1)이면서 최종 가격이 무료(maxprice=free)인 항목. 장르 구분 없이 전부 받는다.
+const FREE_URL = 'https://store.steampowered.com/search/results/?query&start=0&count=50&specials=1&maxprice=free&infinite=1&cc=kr&l=koreana';
+const FREE_COUNT = 8;
+const TYPE_LABEL = { game: '게임', dlc: 'DLC', demo: '데모', music: '사운드트랙', video: '영상' };
 
 function loadDeals() {
   try { return JSON.parse(fs.readFileSync(STORE_PATH, 'utf8')); } catch (e) { return { updatedAt: null, lastError: null, genres: [], items: [] }; }
@@ -60,6 +66,8 @@ async function enrich(items, expirations) {
       const data = d[it.appid] && d[it.appid].data;
       if (data && data.header_image) it.image = data.header_image;
       if (data && data.name) it.name = data.name;
+      if (data && data.type) { it.type = data.type; it.typeLabel = TYPE_LABEL[data.type] || data.type; }
+      if (data && data.fullgame && data.fullgame.name) it.parentName = data.fullgame.name; // DLC 가 속한 본편 이름
     } catch (e) { log('steam', `appdetails 실패 (${it.appid}): ${e.message}`); }
 
     it.discountEndsAt = expirations.get(String(it.appid)) || null;
@@ -107,7 +115,19 @@ async function run() {
       log('steam', `${g.label}: ${top.map((i) => `${i.name}(-${i.discount}%)`).join(', ') || '없음'}`);
     }
     if (!genres.some((g) => g.items.length)) throw new Error('할인 게임을 찾지 못함 (응답 구조 변경?)');
-    const next = { updatedAt: new Date().toISOString(), lastError: null, source: 'Steam 상점 · 장르별 할인율 순', genres, items: genres.flatMap((g) => g.items) };
+
+    // 무료 배포(100% 할인) 항목. 본편 게임을 앞에, DLC 등은 뒤에 둔다. 있을 때만 첫 탭으로 넣는다.
+    try {
+      const json = JSON.parse(await fetchText(FREE_URL, { headers: { Accept: 'application/json', Cookie: COOKIE } }));
+      const free = parse(json).filter((it) => it.discount >= 100).map((it) => ({ ...it, free: true, finalPrice: '무료' }));
+      await enrich(free, expirations);
+      free.sort((a, b) => (a.type === 'game' ? 0 : 1) - (b.type === 'game' ? 0 : 1) || a.name.localeCompare(b.name, 'ko'));
+      const top = free.slice(0, FREE_COUNT);
+      if (top.length) genres.unshift({ id: 'free', label: '무료 배포', desc: '한정 기간 100% 할인 · 받으면 영구 소장', free: true, items: top });
+      log('steam', `무료 배포: ${top.map((i) => `${i.name}${i.type && i.type !== 'game' ? `[${i.typeLabel}]` : ''}`).join(', ') || '없음'}`);
+    } catch (e) { log('steam', `무료 배포 조회 실패: ${e.message}`); }
+
+    const next = { updatedAt: new Date().toISOString(), lastError: null, source: 'Steam 상점 · 장르별 할인율 순 + 무료 배포', genres, items: genres.flatMap((g) => g.items) };
     fs.writeFileSync(STORE_PATH, JSON.stringify(next, null, 2));
     log('steam', `완료: ${genres.map((g) => `${g.label} ${g.items.length}개`).join(', ')}`);
     return { ok: true, count: next.items.length };

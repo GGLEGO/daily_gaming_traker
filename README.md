@@ -61,7 +61,7 @@ logs/agents.log        수집 로그
 public/                프론트엔드 (index.html 홈, game.html 게임 페이지, style.css, app.js)
 chatbot/               사이트 챗봇 (index.js 서버 라우터, public/widget.js·widget.css 위젯)
 news/                  게임 뉴스 수집기 (index.js, 구글 뉴스 RSS 검색, 분류별 30분 캐시)
-steam/                 Steam 장르별 인기 할인 수집기 (index.js, 6시간마다, 실시간 접속자 포함)
+steam/                 Steam 장르별 인기 할인 + 무료 배포(100% 할인) 수집기 (index.js, 6시간마다, 실시간 접속자 포함)
 stream/                실시간 스트리머 방송 수집기 (index.js, SOOP + 치지직, 요청 시 2분 캐시)
 scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리그·경기 일정 수집기 (esports.js: lolesports, vlr.gg, Liquipedia TFT, pubgesports, OWCS, 각 게임 공지)
 ```
@@ -77,7 +77,7 @@ scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리�
 | `GET /api/:game/patches` | 패치 목록 (본문 제외) |
 | `GET /api/:game/patches/latest` | 최신 패치 전문 |
 | `GET /api/:game/patches/:id` | 특정 패치 전문 |
-| `GET /api/deals` | Steam 인기 할인 게임 5개 (홈 배너 슬라이드) |
+| `GET /api/deals` | Steam 무료 배포(100% 할인) 항목과 장르별 인기 할인 게임 5개 (홈 배너 슬라이드) |
 | `GET /api/streams` | 실시간 방송을 제공하는 게임 목록 |
 | `GET /api/news?cat=all` | 구글 뉴스 기반 게임 기사 (분류: all, update, company, users, esports / 30분 캐시) |
 | `GET /api/esports/:game` | 게임별 대회·리그·경기 일정 또는 대회 소식 (30~60분 캐시) |

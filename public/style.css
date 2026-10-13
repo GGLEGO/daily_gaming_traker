@@ -443,3 +443,10 @@ img { max-width: 100%; height: auto; }
 .rev-history { margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
 .rev-history summary { cursor: pointer; font-weight: 700; color: var(--g-800); }
 .rev-history ul { margin: 8px 0 0 18px; padding: 0; display: grid; gap: 4px; }
+
+/* Steam 무료 배포(100% 할인) 표시 */
+.deals-genre-free { border-color: var(--accent); }
+.deals-genre-free.active { background: var(--accent); color: var(--ink); }
+.deal-free .deal-pct { background: var(--accent); color: var(--ink); }
+.deal-keep { font-size: 0.78rem; font-weight: 700; color: var(--accent); align-self: center; }
+.deal-type { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 1px 7px; border-radius: 5px; background: rgba(255,255,255,.14); color: #fff; }

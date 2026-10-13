@@ -2,8 +2,8 @@
   "game": "lol",
   "name": "League of Legends",
   "sourceUrl": "https://www.leagueoflegends.com/ko-kr/news/tags/patch-notes/",
-  "lastRun": "2026-10-13T06:40:01.625Z",
-  "lastSuccess": "2026-10-13T06:40:06.557Z",
+  "lastRun": "2026-10-13T07:04:59.253Z",
+  "lastSuccess": "2026-10-13T07:05:04.082Z",
   "lastError": null,
   "items": [
     {
@@ -502,5 +502,5 @@
     }
   ],
   "newCount": 5,
-  "updatedCount": 1
+  "updatedCount": 0
 }

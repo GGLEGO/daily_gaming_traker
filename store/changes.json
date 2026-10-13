@@ -1,6 +1,276 @@
 {
-  "updatedAt": "2026-10-13T06:43:26.926Z",
+  "updatedAt": "2026-10-13T07:05:10.460Z",
   "events": [
+    {
+      "at": "2026-10-13T07:05:07.986Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-6-notes-2025",
+      "title": "전략적 팀 전투 13.6 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-6-notes-2025",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:08.319Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-5-notes-2025",
+      "title": "#1 전략적 팀 전투 13.5 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-5-notes-2025",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:08.655Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-4-notes-2025",
+      "title": "13.4 전략적 팀 전투 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-4-notes-2025",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:08.967Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-3-notes-2025",
+      "title": "#1 13.3 전략적 팀 전투 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-3-notes-2025",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:09.327Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-14-24-notes",
+      "title": "[#1] 14.24 전략적 팀 전투 패치 노트 (수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:05.127Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-10-00",
+      "title": "발로란트 10.00 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-10-00",
+      "publishedAt": "2025-01-07T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:05.455Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-11",
+      "title": "발로란트 9.11 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-11",
+      "publishedAt": "2024-12-10T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:05.803Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-10",
+      "title": "발로란트 9.10 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-10",
+      "publishedAt": "2024-11-19T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:06.116Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-09",
+      "title": "발로란트 9.09 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-09",
+      "publishedAt": "2024-11-05T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:06.419Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-08",
+      "title": "발로란트 9.08 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-08",
+      "publishedAt": "2024-10-22T13:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:04:59.977Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-04-notes",
+      "title": "25.04 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-04-notes",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:00.331Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-2025-s1-3-notes",
+      "title": "2025.S1.3 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-2025-s1-3-notes",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:00.707Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-2-notes",
+      "title": "2025.S1.2 패치노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-2-notes",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:01.404Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-1-notes",
+      "title": "#1 2025.S1.1 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-1-notes",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T07:05:01.975Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-14-24-notes",
+      "title": "[#2] 14.24 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:38.366Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-6-notes-2025",
+      "title": "전략적 팀 전투 13.6 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-6-notes-2025",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:38.686Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-5-notes-2025",
+      "title": "#1 전략적 팀 전투 13.5 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-5-notes-2025",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:39.060Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-4-notes-2025",
+      "title": "13.4 전략적 팀 전투 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-4-notes-2025",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:39.843Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-3-notes-2025",
+      "title": "#1 13.3 전략적 팀 전투 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-3-notes-2025",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:40.223Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-14-24-notes",
+      "title": "[#1] 14.24 전략적 팀 전투 패치 노트 (수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:35.238Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-10-00",
+      "title": "발로란트 10.00 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-10-00",
+      "publishedAt": "2025-01-07T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:35.552Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-11",
+      "title": "발로란트 9.11 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-11",
+      "publishedAt": "2024-12-10T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:35.937Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-10",
+      "title": "발로란트 9.10 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-10",
+      "publishedAt": "2024-11-19T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:36.261Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-09",
+      "title": "발로란트 9.09 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-09",
+      "publishedAt": "2024-11-05T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:36.587Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-08",
+      "title": "발로란트 9.08 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-08",
+      "publishedAt": "2024-10-22T13:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:31.619Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-04-notes",
+      "title": "25.04 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-04-notes",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:31.948Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-2025-s1-3-notes",
+      "title": "2025.S1.3 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-2025-s1-3-notes",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:32.305Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-2-notes",
+      "title": "2025.S1.2 패치노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-2-notes",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:33.118Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-1-notes",
+      "title": "#1 2025.S1.1 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-1-notes",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-13T06:48:33.494Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-14-24-notes",
+      "title": "[#2] 14.24 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
     {
       "at": "2026-10-13T06:43:24.445Z",
       "type": "backfill",
