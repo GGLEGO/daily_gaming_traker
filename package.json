@@ -1,0 +1,20 @@
+{
+  "name": "daily-gaming-tracker",
+  "version": "1.0.0",
+  "description": "게임 패치노트 뉴스 사이트 - 24시간 주기 수집 에이전트 + 원문 수정 감지 하네스 포함",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "agents": "node run.js",
+    "agent:lol": "node run.js lol",
+    "agent:overwatch": "node run.js overwatch"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3"
+  }
+}

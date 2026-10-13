@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Gaming Tracker - 게임 패치노트 뉴스</title>
+  <meta name="description" content="리그 오브 레전드, 오버워치 최신 패치 노트를 24시간마다 자동으로 모아 전하는 게임 뉴스 사이트">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="/logo.png?v=3" type="image/png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body data-page="home">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span id="today-line">오늘의 게임 뉴스</span>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a class="brand" href="/">
+        <span class="brand-logo-wrap"><img class="brand-logo" src="/logo.png?v=3" alt="DGT 로고"></span>
+        <span class="brand-title">Daily Gaming Tracker</span>
+        <span class="brand-sub">게임 패치 노트를 가장 빠르게, 원문 그대로</span>
+      </a>
+      <form class="search-form" action="/search" method="get" role="search">
+        <input class="search-input" type="search" name="q" placeholder="패치 노트 검색 (챔피언, 영웅, 아이템...)" aria-label="패치 노트 검색" required>
+        <button class="search-btn" type="submit">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <section id="deals" class="deals container deals-top" aria-label="Steam 인기 할인 게임" hidden>
+    <div class="deals-head">
+      <span class="deals-kicker">STEAM 인기 할인 <span class="deals-kicker-sub">장르별 할인율 TOP 5</span></span>
+      <div id="deals-genres" class="deals-genres" role="tablist"></div>
+      <span id="deals-updated" class="deals-updated"></span>
+    </div>
+    <div class="deals-stage">
+      <button class="deals-arrow deals-prev" type="button" aria-label="이전 게임">‹</button>
+      <div class="deals-viewport"><div id="deals-track" class="deals-track"></div></div>
+      <button class="deals-arrow deals-next" type="button" aria-label="다음 게임">›</button>
+    </div>
+    <div id="deals-dots" class="deals-dots"></div>
+  </section>
+
+  <nav class="navbar">
+    <div class="container nav-heading">
+      <h2 class="section-title">최신 패치 목록</h2>
+      <p class="section-desc">장르를 누르면 게임 목록이 열리고, 게임을 누르면 최신 패치 내역을 볼 수 있습니다.</p>
+    </div>
+    <div class="container nav-inner">
+      <div class="game-buttons" id="game-buttons"></div>
+    </div>
+  </nav>
+
+  <main class="container page">
+    <section id="changes" class="section changes" hidden>
+      <div class="section-head">
+        <h2 class="section-title">최근 변경</h2>
+        <p class="section-desc">새로 올라온 패치 노트와 원문이 수정되어 다시 반영된 글입니다.</p>
+      </div>
+      <div id="changes-list" class="changes-list"></div>
+      <p id="changes-foot" class="changes-foot"></p>
+    </section>
+
+    <section id="streams" class="section streams" hidden>
+      <div class="section-head">
+        <h2 class="section-title">실시간 스트리머 방송</h2>
+      </div>
+      <div id="streams-tabs" class="streams-tabs"></div>
+      <div id="streams-panel" class="streams-panel"></div>
+    </section>
+
+    <section id="news" class="section gnews" hidden>
+      <div class="section-head">
+        <h2 class="section-title">게임 뉴스</h2>
+        <p class="section-desc">구글 뉴스에서 모은 게임·게임사·유저 반응 관련 최신 기사입니다.</p>
+      </div>
+      <div id="news-tabs" class="gnews-tabs"></div>
+      <div id="news-list" class="gnews-list"></div>
+      <div id="news-foot" class="gnews-foot"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-brand">DAILY GAMING TRACKER</p>
+      <p>패치 노트 본문은 각 게임 공식 사이트에서 가져오며 저작권은 Riot Games, Blizzard Entertainment 에 있습니다.</p>
+      <p>&copy; 2026 Daily Gaming Tracker</p>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/chatbot/widget.css">
+  <script src="/app.js"></script>
+  <script src="/chatbot/widget.js" defer></script>
+</body>
+</html>

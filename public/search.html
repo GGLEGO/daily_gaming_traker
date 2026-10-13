@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 - Daily Gaming Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="/logo.png?v=3" type="image/png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body data-page="search">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span id="today-line">오늘의 게임 뉴스</span>
+    </div>
+  </div>
+
+  <header class="masthead masthead-compact">
+    <div class="container masthead-inner">
+      <a class="brand" href="/">
+        <span class="brand-logo-wrap"><img class="brand-logo" src="/logo.png?v=3" alt="DGT 로고"></span>
+        <span class="brand-title">Daily Gaming Tracker</span>
+        <span class="brand-sub">게임 패치 노트를 가장 빠르게, 원문 그대로</span>
+      </a>
+      <form class="search-form" action="/search" method="get" role="search">
+        <input class="search-input" type="search" name="q" placeholder="패치 노트 검색 (챔피언, 영웅, 아이템...)" aria-label="패치 노트 검색" required>
+        <button class="search-btn" type="submit">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="game-buttons" id="game-buttons"></div>
+    </div>
+  </nav>
+
+  <main class="container page">
+    <div class="game-head">
+      <p class="breadcrumb"><a href="/">홈</a> <span>›</span> 검색</p>
+      <h1 id="search-title" class="game-title">검색 결과</h1>
+      <p id="search-tagline" class="game-tagline"></p>
+    </div>
+
+    <div class="two-col">
+      <section class="section">
+        <div id="search-results" class="news-list"><div class="card skeleton"></div></div>
+      </section>
+      <aside class="sidebar">
+        <div class="widget">
+          <h3 class="widget-title">게임별 결과</h3>
+          <ul id="search-games" class="widget-list"></ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-brand">DAILY GAMING TRACKER</p>
+      <p>패치 노트 본문은 각 게임 공식 사이트에서 가져오며 저작권은 Riot Games, Blizzard Entertainment 에 있습니다.</p>
+      <p>&copy; 2026 Daily Gaming Tracker</p>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/chatbot/widget.css">
+  <script src="/app.js"></script>
+  <script src="/chatbot/widget.js" defer></script>
+</body>
+</html>
