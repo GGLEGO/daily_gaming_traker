@@ -2,12 +2,12 @@
 // 에이전트(game/<회사>/agents.js)는 원문을 그대로 가져오는 일만 하고, 판정·이력·이벤트는 모두 여기서 처리한다.
 //  - contentHash : 본문을 평문으로 정규화해 해시 (이미지 URL 토큰 변경 등 노이즈는 무시)
 //  - applyRevision: 저장된 항목과 새로 받은 본문을 비교해 바뀌었으면 교체하고 이전 버전을 revisions 에 남긴다
-//  - recordEvents : data/changes.json 에 new / updated / error 이벤트를 쌓는다 (홈 "최근 변경" 피드, /api/changes)
+//  - recordEvents : store/changes.json 에 new / updated / error 이벤트를 쌓는다 (홈 "최근 변경" 피드, /api/changes)
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, 'store');
 const CHANGES_PATH = path.join(DATA_DIR, 'changes.json');
 const MAX_EVENTS = 300;        // 보관할 변경 이벤트 수
 const MAX_REVISIONS = 5;       // 항목당 보관할 이전 버전 메타 수

@@ -10,7 +10,7 @@
   게임별 이름·주소·필터 같은 데이터는 **game/<회사>/data/<게임>.js** 에 따로 둡니다.
 - **하네스(harness.js)** 는 가져온 원문을 받아 "무엇이 새로 왔고 무엇이 바뀌었는지" 판정합니다. 저장된 최신 3건과 목록상 제목이 바뀐 글은
   매 실행마다 본문을 다시 받아 평문 해시를 비교하고, 원본이 수정됐으면 본문을 교체한 뒤 이전 버전을 `revisions` 에 남깁니다.
-  신규·수정·오류 이벤트는 `data/changes.json` 에 쌓여 홈의 "최근 변경" 피드와 `/api/changes` 로 제공됩니다.
+  신규·수정·오류 이벤트는 `store/changes.json` 에 쌓여 홈의 "최근 변경" 피드와 `/api/changes` 로 제공됩니다.
 
 ## 실행
 
@@ -42,7 +42,7 @@ node run.js lol            # 한 게임만 (lol | overwatch | valorant | tft | l
 ```
 server.js              Express 서버 (정적 파일 + API + 스케줄러 시작)
 base.js                공통 수집 루틴 (HTTP 요청, HTML 정리, 저장소, 로그) - 모든 에이전트와 수집기가 사용
-harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 기록(data/changes.json)
+harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 기록(store/changes.json)
 run.js                 에이전트 수동 실행 CLI (node run.js [게임])
 game/
   index.js             게임 에이전트 등록부 + 장르 목록 (회사 폴더를 자동으로 모은다)
@@ -55,8 +55,8 @@ game/
   nimbleneuron/        Nimble Neuron - 패치노트 API + 게시글 본문 파서, data/eternalreturn.js
   krafton/             Krafton      - Nuxt 상태 데이터 파서, data/pubg.js
   ncsoft/              NCSoft       - plaync 커뮤니티 API 파서, data/aion2.js
-data/<game>.json       수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
-data/changes.json      하네스가 기록한 변경 이벤트 (new / updated / error, 최근 300건)
+store/<game>.json      수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
+store/changes.json     하네스가 기록한 변경 이벤트 (new / updated / error, 최근 300건)
 logs/agents.log        수집 로그
 public/                프론트엔드 (index.html 홈, game.html 게임 페이지, style.css, app.js)
 chatbot/               사이트 챗봇 (index.js 서버 라우터, public/widget.js·widget.css 위젯)

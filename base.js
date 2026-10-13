@@ -1,11 +1,11 @@
-// 공통 에이전트 베이스: 원본 사이트를 가져와 파싱하고, 저장소(data/*.json)와 비교해 새 패치를 추가한다.
+// 공통 에이전트 베이스: 원본 사이트를 가져와 파싱하고, 저장소(store/*.json)와 비교해 새 패치를 추가한다.
 // 저장된 최신 항목은 하네스(harness.js)를 통해 본문을 다시 확인해 원본이 수정됐으면 교체하고 이력을 남긴다.
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
 const harness = require('./harness'); // 수정 감지·이력·변경 이벤트 (하네스 층)
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, 'store');
 const LOG_DIR = path.join(__dirname, 'logs');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 TodayGMNewsBot/1.0';
 const MAX_ITEMS = 40;      // 게임당 보관할 최대 패치 수

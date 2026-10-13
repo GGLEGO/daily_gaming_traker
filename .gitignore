@@ -1,4 +1,4 @@
 node_modules/
 logs/
 .env
-data/*.tmp
+store/*.tmp

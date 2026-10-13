@@ -105,7 +105,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// 최근 변경 이벤트 (신규 패치 / 원문 수정 반영 / 수집 오류). 하네스가 기록한 data/changes.json 을 읽는다.
+// 최근 변경 이벤트 (신규 패치 / 원문 수정 반영 / 수집 오류). 하네스가 기록한 store/changes.json 을 읽는다.
 app.get('/api/changes', (req, res) => {
   const limit = Math.min(Math.max(Number(req.query.limit) || 30, 1), 200);
   const type = String(req.query.type || '');
@@ -211,7 +211,7 @@ app.listen(PORT, () => {
   console.log(`Daily Gaming Tracker 실행 중: http://localhost:${PORT}`);
   if (process.env.DISABLE_SCHEDULER !== '1') {
     // 데이터가 하나도 없으면 바로 수집, 있으면 스케줄만 등록하고 시작 시에도 1회 확인
-    const hasData = GAME_IDS.some((id) => fs.existsSync(path.join(__dirname, 'data', `${id}.json`)));
+    const hasData = GAME_IDS.some((id) => fs.existsSync(path.join(__dirname, 'store', `${id}.json`)));
     scheduler.start({ runOnStart: true });
     if (!hasData) console.log('초기 데이터가 없어 수집을 시작합니다.');
   }
