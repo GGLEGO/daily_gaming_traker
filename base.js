@@ -170,4 +170,46 @@ async function runAgent(spec) {
   }
 }
 
-module.exports = { runAgent, fetchText, sanitizeHtml, textOf, loadStore, log, DATA_DIR };
+/**
+ * 게임 데이터(game/<회사>/data/<game>.js)와 회사 에이전트(game/<회사>/agents.js)의 수집 함수를 합쳐
+ * 등록부(game/index.js)가 쓰는 에이전트 객체를 만든다.
+ *  data     = { game, name, label, short, tagline, genre, sourceUrl, imageInBody?, ...회사별 필드 }
+ *  handlers = { listPatches(), fetchDetail(item) }
+ */
+function defineAgent(data, handlers) {
+  for (const k of ['game', 'name', 'sourceUrl', 'short', 'tagline', 'genre']) {
+    if (!data[k]) throw new Error(`게임 데이터에 ${k} 가 없습니다: ${JSON.stringify(data.game || data)}`);
+  }
+  const spec = {
+    game: data.game,
+    name: data.name,
+    sourceUrl: data.sourceUrl,
+    imageInBody: !!data.imageInBody,
+    listPatches: handlers.listPatches,
+    fetchDetail: handlers.fetchDetail,
+  };
+  return { id: data.game, label: data.label || data.name, short: data.short, tagline: data.tagline, genre: data.genre, data, spec, run: () => runAgent(spec) };
+}
+
+// game/<회사>/data/*.js 를 모두 읽어 배열로 돌려준다 (order 필드 → 파일명 순)
+function loadGameData(dir) {
+  return fs.readdirSync(dir)
+    .filter((f) => f.endsWith('.js'))
+    .sort()
+    .map((f) => ({ file: f, data: require(path.join(dir, f)) }))
+    .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99) || a.file.localeCompare(b.file))
+    .map((x) => x.data);
+}
+
+// 회사 agents.js 를 직접 실행했을 때: node game/<회사>/agents.js [게임] → 그 회사 게임을 바로 수집한다
+async function runCli(agents) {
+  const only = process.argv[2];
+  const targets = only ? agents.filter((a) => a.id === only) : agents;
+  if (!targets.length) { console.error(`알 수 없는 게임: ${only} (가능: ${agents.map((a) => a.id).join(', ')})`); process.exit(2); }
+  const results = {};
+  for (const a of targets) results[a.id] = await a.run();
+  console.log(JSON.stringify(results, null, 2));
+  process.exit(Object.values(results).every((r) => r.ok) ? 0 : 1);
+}
+
+module.exports = { runAgent, defineAgent, loadGameData, runCli, fetchText, sanitizeHtml, textOf, loadStore, log, DATA_DIR };

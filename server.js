@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
-const { AGENTS, GAME_IDS } = require('./agents/index');
+const { AGENTS, GAME_IDS } = require('./game/index');
 const { loadStore, textOf } = require('./base');
 const harness = require('./harness'); // 변경 이벤트(신규·수정) 조회
 const scheduler = require('./scheduler'); // 24시간 스케줄러 (scheduler/ 폴더)
@@ -49,7 +49,7 @@ app.get('/api/games', (req, res) => {
 
 // 게임 장르 목록 (네비게이션 블록 순서)
 app.get('/api/genres', (req, res) => {
-  const { GENRES } = require('./agents/index');
+  const { GENRES } = require('./game/index');
   res.json(GENRES.map((g) => ({ ...g, games: GAME_IDS.filter((id) => (AGENTS[id].genre || 'etc') === g.id) })));
 });
 

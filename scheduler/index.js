@@ -1,7 +1,7 @@
 // 24시간 주기 스케줄러: 서버 시작 시 1회 실행 후, 매일 지정 시각(기본 09:00 KST)에 모든 에이전트를 실행한다.
 // 시각은 환경변수 PATCH_CHECK_CRON (cron 표현식), PATCH_CHECK_TZ 로 바꿀 수 있다.
 const cron = require('node-cron');
-const { AGENTS, GAME_IDS } = require('../agents/index');
+const { AGENTS, GAME_IDS } = require('../game/index');
 const steam = require('../steam');
 const { log } = require('../base');
 

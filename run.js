@@ -1,5 +1,5 @@
 // 수동 실행: node run.js [게임 아이디] (생략하면 전체)
-const { AGENTS, GAME_IDS } = require('./agents/index');
+const { AGENTS, GAME_IDS } = require('./game/index');
 
 async function main() {
   const targets = process.argv[2] ? [process.argv[2]] : GAME_IDS;

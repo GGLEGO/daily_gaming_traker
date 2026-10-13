@@ -1,10 +1,8 @@
-// PUBG: 배틀그라운드 패치노트 에이전트
-// 원본: https://pubg.com/ko/news?category=patch_notes
+// Krafton 에이전트 (PUBG: 배틀그라운드)
 // 페이지가 Nuxt 로 렌더되어 window.__NUXT__ 상태 안에 목록(posts)과 본문(content HTML)이 들어 있다.
-const { runAgent, fetchText } = require('../../base');
+const path = require('path');
+const { defineAgent, loadGameData, runCli, fetchText } = require('../../base');
 
-const BASE = 'https://pubg.com';
-const LIST_URL = `${BASE}/ko/news?category=patch_notes`;
 const HEADERS = { 'Accept-Language': 'ko-KR,ko;q=0.9' };
 
 // window.__NUXT__=(function(a,b,...){return {...}}(...)) 형태를 평가해 객체로 돌려준다
@@ -34,19 +32,19 @@ function kst(s) {
   return m ? `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+09:00` : null;
 }
 
-async function listPatches() {
-  const html = await fetchText(LIST_URL, { headers: HEADERS });
+async function listPatches(d) {
+  const html = await fetchText(d.sourceUrl, { headers: HEADERS });
   const state = nuxtState(html);
   const posts = find(state, (o) => Array.isArray(o) && o.length > 0 && o[0] && typeof o[0] === 'object' && o[0].postId && o[0].title);
   if (!posts) throw new Error('뉴스 목록(posts)을 찾지 못함');
   return posts
-    .filter((p) => !p.category || p.category === 'patch_notes')
+    .filter((p) => !p.category || p.category === d.category)
     .map((p) => {
       const img = (p.images || []).find((x) => x.imageUrl) || {};
       return {
         id: `post-${p.postId}`,
         title: p.title,
-        url: `${BASE}/ko/news/${p.postId}`,
+        url: `${d.base}/ko/news/${p.postId}`,
         publishedAt: kst(p.displayStartTime) || kst(p.createdAt) || null,
         summary: p.summary || '',
         image: img.imageUrl || img.thumbUrl || null,
@@ -59,25 +57,22 @@ async function fetchDetail(item) {
   const state = nuxtState(html);
   // 가장 긴 HTML 문자열이 본문이다 (postDetailContent.content)
   let best = '';
-  (function walk(o, d) {
-    if (d > 10 || !o || typeof o !== 'object') return;
+  (function walk(o, depth) {
+    if (depth > 10 || !o || typeof o !== 'object') return;
     for (const k of Object.keys(o)) {
       const v = o[k];
       if (typeof v === 'string' && v.length > best.length && /<(h\d|p|ul|div|img)[\s>]/i.test(v)) best = v;
-      else walk(v, d + 1);
+      else walk(v, depth + 1);
     }
   })(state, 0);
   if (!best) throw new Error('본문 content 를 찾지 못함');
   return { html: best };
 }
 
-const spec = {
-  game: 'pubg',
-  name: 'PUBG: 배틀그라운드',
-  sourceUrl: LIST_URL,
-  listPatches,
+const agents = loadGameData(path.join(__dirname, 'data')).map((d) => defineAgent(d, {
+  listPatches: () => listPatches(d),
   fetchDetail,
-};
+}));
 
-module.exports = { spec, run: () => runAgent(spec) };
-if (require.main === module) runAgent(spec).then((r) => { console.log(r); process.exit(r.ok ? 0 : 1); });
+module.exports = { company: 'Krafton', agents };
+if (require.main === module) runCli(agents);

@@ -1,14 +1,10 @@
-// 이터널 리턴 패치노트 에이전트
-// 원본: https://playeternalreturn.com/posts/news?categoryPath=patchnote
+// Nimble Neuron 에이전트 (이터널 리턴)
 // 목록은 사이트가 쓰는 JSON API(/api/v1/posts/news?category=patchnote)로 받고,
 // 상세는 게시글 페이지의 .er-article-detail__content 본문을 그대로 가져온다.
+const path = require('path');
 const cheerio = require('cheerio');
-const { runAgent, fetchText } = require('../../base');
+const { defineAgent, loadGameData, runCli, fetchText } = require('../../base');
 
-const BASE = 'https://playeternalreturn.com';
-const LIST_URL = `${BASE}/posts/news?categoryPath=patchnote`;
-const API_URL = `${BASE}/api/v1/posts/news?category=patchnote&page=`;
-const PAGES = 2;
 const HEADERS = { Accept: 'application/json', 'Accept-Language': 'ko-KR,ko;q=0.9' };
 
 function pickKo(article) {
@@ -16,10 +12,10 @@ function pickKo(article) {
   return i18n.ko_KR || i18n.ko || Object.values(i18n)[0] || {};
 }
 
-async function listPatches() {
+async function listPatches(d) {
   const items = [];
-  for (let p = 1; p <= PAGES; p++) {
-    const json = JSON.parse(await fetchText(API_URL + p, { headers: HEADERS }));
+  for (let p = 1; p <= d.pages; p++) {
+    const json = JSON.parse(await fetchText(d.apiUrl(p), { headers: HEADERS }));
     const articles = json.articles || [];
     if (!articles.length) break;
     for (const a of articles) {
@@ -29,7 +25,7 @@ async function listPatches() {
       items.push({
         id: `post-${a.id}`,
         title,
-        url: ko.content_link || a.url || `${BASE}/posts/news/${a.id}`,
+        url: ko.content_link || a.url || `${d.base}/posts/news/${a.id}`,
         publishedAt: a.created_at || null,
         summary: (ko.summary || '').trim(),
         image: a.thumbnail_url || null,
@@ -53,13 +49,10 @@ async function fetchDetail(item) {
   };
 }
 
-const spec = {
-  game: 'eternalreturn',
-  name: '이터널 리턴',
-  sourceUrl: LIST_URL,
-  listPatches,
+const agents = loadGameData(path.join(__dirname, 'data')).map((d) => defineAgent(d, {
+  listPatches: () => listPatches(d),
   fetchDetail,
-};
+}));
 
-module.exports = { spec, run: () => runAgent(spec) };
-if (require.main === module) runAgent(spec).then((r) => { console.log(r); process.exit(r.ok ? 0 : 1); });
+module.exports = { company: 'Nimble Neuron', agents };
+if (require.main === module) runCli(agents);

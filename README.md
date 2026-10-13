@@ -6,7 +6,8 @@
 
 구조는 두 층으로 나뉩니다.
 
-- **에이전트(agents/)** 는 각 게임 공식 사이트에서 패치 노트 원문을 그대로 가져오는 일만 합니다. 요약이나 재작성은 하지 않습니다.
+- **에이전트(game/<회사>/agents.js)** 는 그 회사 공식 사이트에서 패치 노트 원문을 그대로 가져오는 일만 합니다. 요약이나 재작성은 하지 않습니다.
+  게임별 이름·주소·필터 같은 데이터는 **game/<회사>/data/<게임>.js** 에 따로 둡니다.
 - **하네스(harness.js)** 는 가져온 원문을 받아 "무엇이 새로 왔고 무엇이 바뀌었는지" 판정합니다. 저장된 최신 3건과 목록상 제목이 바뀐 글은
   매 실행마다 본문을 다시 받아 평문 해시를 비교하고, 원본이 수정됐으면 본문을 교체한 뒤 이전 버전을 `revisions` 에 남깁니다.
   신규·수정·오류 이벤트는 `data/changes.json` 에 쌓여 홈의 "최근 변경" 피드와 `/api/changes` 로 제공됩니다.
@@ -43,15 +44,17 @@ server.js              Express 서버 (정적 파일 + API + 스케줄러 시작
 base.js                공통 수집 루틴 (HTTP 요청, HTML 정리, 저장소, 로그) - 모든 에이전트와 수집기가 사용
 harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 기록(data/changes.json)
 run.js                 에이전트 수동 실행 CLI (node run.js [게임])
-agents/
-  index.js             게임 에이전트 등록부 + 장르 목록 (새 게임은 여기에 추가)
-  riot/                Riot Games   - riot.js(공통 파서), lol.js, valorant.js, tft.js
-  blizzard/            Blizzard     - overwatch.js
-  smilegate/           Smilegate    - lostark.js (공지사항 중 "업데이트 내역 안내")
-  nexon/               Nexon        - maplestory.js, fconline.js (정기점검·업데이트 안내)
-  nimbleneuron/        Nimble Neuron - eternalreturn.js (패치노트 API + 게시글 본문)
-  krafton/             Krafton      - pubg.js (Nuxt 상태 데이터)
-  ncsoft/              NCSoft       - plaync.js(공통 파서), aion2.js
+game/
+  index.js             게임 에이전트 등록부 + 장르 목록 (회사 폴더를 자동으로 모은다)
+  <회사>/agents.js     회사별 수집 로직 (사이트 구조 파싱). node game/<회사>/agents.js [게임] 으로 단독 실행 가능
+  <회사>/data/<게임>.js 게임 데이터 (game, name, label, short, tagline, genre, sourceUrl, imageInBody, 회사별 주소·필터)
+  riot/                Riot Games   - __NEXT_DATA__ 파서, data/lol.js, valorant.js, tft.js
+  blizzard/            Blizzard     - .PatchNotes-patch 파서, data/overwatch.js
+  smilegate/           Smilegate    - 공지사항 "업데이트 내역 안내" 파서, data/lostark.js
+  nexon/               Nexon        - updateBoard·noticeBoard 파서, data/maplestory.js, fconline.js
+  nimbleneuron/        Nimble Neuron - 패치노트 API + 게시글 본문 파서, data/eternalreturn.js
+  krafton/             Krafton      - Nuxt 상태 데이터 파서, data/pubg.js
+  ncsoft/              NCSoft       - plaync 커뮤니티 API 파서, data/aion2.js
 data/<game>.json       수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
 data/changes.json      하네스가 기록한 변경 이벤트 (new / updated / error, 최근 300건)
 logs/agents.log        수집 로그
@@ -87,11 +90,19 @@ scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리�
 
 ## 새 게임 추가하기
 
-1. `agents/<회사>/<game>.js` 를 만들고 (예: `agents/blizzard/overwatch.js`, 공통 모듈은 `require('../../base')`) `spec = { game, name, sourceUrl, listPatches, fetchDetail }` 을 내보냅니다.
-   - `listPatches()` 는 `[{ id, title, url, publishedAt, summary, image, html? }]` 를 돌려줍니다.
-   - `fetchDetail(item)` 은 `{ html, image?, publishedAt?, summary? }` 를 돌려줍니다.
-2. `agents/index.js` 의 `AGENTS` 에 등록하고 `genre`(fps / rpg / aos / sports) 를 지정합니다. 새 장르는 같은 파일의 `GENRES` 에 추가합니다.
-3. 네비게이션 버튼과 홈 카드는 `/api/games` 를 읽어 자동으로 생깁니다. 배지 색만 `public/style.css` 의 `.badge-<game>` 에 추가하면 됩니다.
+**이미 다루는 회사의 게임이면** 그 회사 폴더의  에  하나만 추가합니다. 등록부가 자동으로 읽습니다.
+
+\/ko-kr/news/tags/patch-notes/\
+
+**새 회사면**  와  를 만듭니다.
+
+1.  는  의  로  를 읽고, 게임 데이터마다  를 호출해
+    를 내보냅니다. 끝에  를 두면 단독 실행이 됩니다.
+   -  는  목록을 돌려줍니다.  는 바뀌지 않는 값이어야 합니다.
+   -  은  를 돌려줍니다.
+2. 게임 데이터에는  이 반드시 있어야 하고(fps / rpg / aos / sports), 나머지는 회사 파서가 쓰는 값입니다.
+   새 장르는  의  에, 회사 표시 순서는 같은 파일의  에 추가합니다.
+3. 네비게이션 버튼과 홈 카드는  를 읽어 자동으로 생깁니다. 배지 색만  의  에 추가하면 됩니다.
 
 ## 참고
 

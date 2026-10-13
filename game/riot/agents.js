@@ -1,6 +1,8 @@
-// Riot Games 뉴스 사이트 공통 파서 (League of Legends, VALORANT)
-// 페이지가 Next.js 로 렌더되어 __NEXT_DATA__ JSON 안에 목록과 본문이 들어 있다.
-const { fetchText } = require('../../base');
+// Riot Games 에이전트 (League of Legends, VALORANT, TFT)
+// 뉴스 사이트가 Next.js 로 렌더되어 __NEXT_DATA__ JSON 안에 목록과 본문이 들어 있다.
+// 게임별 주소·필터는 data/<game>.js 에 있고, 여기서는 그 데이터로 수집 함수를 만든다.
+const path = require('path');
+const { defineAgent, loadGameData, runCli, fetchText } = require('../../base');
 
 function nextData(html) {
   const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
@@ -13,24 +15,19 @@ function findBlades(json) {
   return (page && page.blades) || [];
 }
 
-/**
- * Riot 뉴스 태그 페이지에서 패치 목록을 읽는다.
- * @param {string} base  사이트 루트 (예: https://www.leagueoflegends.com)
- * @param {string} listUrl 목록 페이지
- * @param {RegExp} titleFilter 제목 필터
- */
-async function listRiotPatches(base, listUrl, titleFilter) {
-  const html = await fetchText(listUrl);
+// 뉴스 태그 페이지에서 패치 목록을 읽는다
+async function listPatches(d) {
+  const html = await fetchText(d.sourceUrl);
   const blades = findBlades(nextData(html));
   let items = [];
   for (const b of blades) if (Array.isArray(b.items) && b.items.length > items.length) items = b.items;
   if (!items.length) throw new Error('패치 목록 blade 를 찾지 못함');
   return items
     .filter((it) => it.action && it.action.payload && it.action.payload.url)
-    .filter((it) => titleFilter.test(it.title || ''))
+    .filter((it) => d.titleFilter.test(it.title || ''))
     .map((it) => {
       const rel = it.action.payload.url;
-      const url = new URL(rel, base).toString();
+      const url = new URL(rel, d.base).toString();
       const id = rel.replace(/\/+$/, '').split('/').pop();
       const img = (it.imageMedia && it.imageMedia.url) || (it.media && it.media.url) || null;
       return {
@@ -45,8 +42,8 @@ async function listRiotPatches(base, listUrl, titleFilter) {
     });
 }
 
-/** Riot 기사 상세 페이지에서 본문(richText blade 전부)을 읽는다. */
-async function fetchRiotDetail(item) {
+// 기사 상세 페이지에서 본문(richText blade 전부)을 읽는다
+async function fetchDetail(item) {
   const html = await fetchText(item.url);
   const blades = findBlades(nextData(html));
   const masthead = blades.find((b) => b.type === 'articleMasthead');
@@ -62,4 +59,10 @@ async function fetchRiotDetail(item) {
   };
 }
 
-module.exports = { listRiotPatches, fetchRiotDetail };
+const agents = loadGameData(path.join(__dirname, 'data')).map((d) => defineAgent(d, {
+  listPatches: () => listPatches(d),
+  fetchDetail,
+}));
+
+module.exports = { company: 'Riot Games', agents };
+if (require.main === module) runCli(agents);
