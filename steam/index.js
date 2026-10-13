@@ -1,5 +1,6 @@
 // Steam 할인 게임 수집기 (게임 패치 에이전트와 별도)
-// 원본: Steam 상점 검색 - 장르 태그별로 할인 중(specials=1)인 인기 게임을 받아, 장르마다 할인율이 높은 순으로 상위 N개를 저장한다.
+// 원본: Steam 상점 검색 - 장르 태그별로 할인 중(specials=1)인 인기 게임(topsellers 50개)을 받아,
+// 동시 접속자 × 할인율 점수(scoreOf)가 높은 순으로 장르마다 상위 N개를 저장한다.
 // 여기에 100% 할인으로 무료 배포 중인 항목(maxprice=free)을 "무료 배포" 탭으로 함께 저장한다.
 const fs = require('fs');
 const path = require('path');
@@ -67,7 +68,7 @@ async function enrich(items, expirations) {
       if (data && data.header_image) it.image = data.header_image;
       if (data && data.name) it.name = data.name;
       if (data && data.type) { it.type = data.type; it.typeLabel = TYPE_LABEL[data.type] || data.type; }
-      if (data && data.fullgame && data.fullgame.name) it.parentName = data.fullgame.name; // DLC 가 속한 본편 이름
+      if (data && data.fullgame && data.fullgame.name) { it.parentName = data.fullgame.name; it.parentAppid = String(data.fullgame.appid || ''); } // DLC 가 속한 본편
     } catch (e) { log('steam', `appdetails 실패 (${it.appid}): ${e.message}`); }
 
     it.discountEndsAt = expirations.get(String(it.appid)) || null;
@@ -109,25 +110,30 @@ async function run() {
         const json = JSON.parse(await fetchText(searchUrl(tag), { headers: { Accept: 'application/json', Cookie: COOKIE } }));
         for (const it of parse(json)) if (!seen.has(it.appid)) seen.set(it.appid, it);
       }
-      const top = [...seen.values()].sort((a, b) => b.discount - a.discount).slice(0, COUNT);
+      // 인기(동시 접속자) × 할인율 점수로 순위를 매긴다. 할인율만 높은 한산한 게임보다 많이 하는 게임의 할인이 위로 온다.
+      const candidates = await attachPlayers([...seen.values()]);
+      for (const it of candidates) it.score = scoreOf(it.discount, it.players);
+      const top = candidates.sort((a, b) => b.score - a.score || b.discount - a.discount).slice(0, COUNT);
       await enrich(top, expirations);
       genres.push({ id: g.id, label: g.label, desc: g.desc, items: top });
-      log('steam', `${g.label}: ${top.map((i) => `${i.name}(-${i.discount}%)`).join(', ') || '없음'}`);
+      log('steam', `${g.label}: ${top.map((i) => `${i.name}(-${i.discount}%, ${i.players == null ? '?' : i.players.toLocaleString('ko-KR')}명, ${i.score})`).join(', ') || '없음'}`);
     }
     if (!genres.some((g) => g.items.length)) throw new Error('할인 게임을 찾지 못함 (응답 구조 변경?)');
 
-    // 무료 배포(100% 할인) 항목. 본편 게임을 앞에, DLC 등은 뒤에 둔다. 있을 때만 첫 탭으로 넣는다.
+    // 무료 배포(100% 할인) 항목. 역시 접속자(DLC 는 본편 접속자) 많은 순으로 두고, 있을 때만 첫 탭으로 넣는다.
     try {
       const json = JSON.parse(await fetchText(FREE_URL, { headers: { Accept: 'application/json', Cookie: COOKIE } }));
       const free = parse(json).filter((it) => it.discount >= 100).map((it) => ({ ...it, free: true, finalPrice: '무료' }));
-      await enrich(free, expirations);
-      free.sort((a, b) => (a.type === 'game' ? 0 : 1) - (b.type === 'game' ? 0 : 1) || a.name.localeCompare(b.name, 'ko'));
+      await enrich(free, expirations); // type / parentAppid 를 먼저 채워야 본편 접속자를 셀 수 있다
+      await attachPlayers(free);
+      for (const it of free) it.score = scoreOf(it.discount, it.players);
+      free.sort((a, b) => b.score - a.score || (a.type === 'game' ? 0 : 1) - (b.type === 'game' ? 0 : 1) || a.name.localeCompare(b.name, 'ko'));
       const top = free.slice(0, FREE_COUNT);
       if (top.length) genres.unshift({ id: 'free', label: '무료 배포', desc: '한정 기간 100% 할인 · 받으면 영구 소장', free: true, items: top });
-      log('steam', `무료 배포: ${top.map((i) => `${i.name}${i.type && i.type !== 'game' ? `[${i.typeLabel}]` : ''}`).join(', ') || '없음'}`);
+      log('steam', `무료 배포: ${top.map((i) => `${i.name}${i.type && i.type !== 'game' ? `[${i.typeLabel}]` : ''}(${i.players == null ? '?' : i.players.toLocaleString('ko-KR')}명)`).join(', ') || '없음'}`);
     } catch (e) { log('steam', `무료 배포 조회 실패: ${e.message}`); }
 
-    const next = { updatedAt: new Date().toISOString(), lastError: null, source: 'Steam 상점 · 장르별 할인율 순 + 무료 배포', genres, items: genres.flatMap((g) => g.items) };
+    const next = { updatedAt: new Date().toISOString(), lastError: null, source: 'Steam 상점 · 장르별 인기(동시 접속자)×할인율 순 + 무료 배포', ranking: RANKING_DESC, genres, items: genres.flatMap((g) => g.items) };
     fs.writeFileSync(STORE_PATH, JSON.stringify(next, null, 2));
     log('steam', `완료: ${genres.map((g) => `${g.label} ${g.items.length}개`).join(', ')}`);
     return { ok: true, count: next.items.length };
@@ -137,6 +143,31 @@ async function run() {
     log('steam', `실패: ${e.message}`);
     return { ok: false, error: e.message };
   }
+}
+
+// ---------- 순위 점수: 인기(동시 접속자) × 할인율 ----------
+// score = 할인율(%) × log10(접속자 + 10). 접속자가 0명이면 할인율 그대로, 1만 명이면 약 4배, 10만 명이면 약 5배 가중된다.
+// 할인율만 큰 한산한 게임(94% 할인, 접속 20명 → 약 140점)보다 많이 하는 게임의 적당한 할인(50% 할인, 접속 3만 명 → 약 225점)이 위로 온다.
+const RANKING_DESC = '할인율 × log10(동시 접속자 + 10)';
+function scoreOf(discount, players) {
+  return Math.round((discount || 0) * Math.log10((players || 0) + 10));
+}
+
+// 접속자 수를 조회할 앱: DLC·사운드트랙처럼 자체 접속자가 없는 항목은 본편 appid 로 센다
+function playersAppid(it) {
+  return it.type && it.type !== 'game' && it.parentAppid ? it.parentAppid : it.appid;
+}
+
+// 여러 항목의 접속자 수를 10개씩 병렬로 채운다 (players, playersOf: 'self' | 'parent')
+async function attachPlayers(items, batch = 10) {
+  for (let i = 0; i < items.length; i += batch) {
+    await Promise.all(items.slice(i, i + batch).map(async (it) => {
+      const id = playersAppid(it);
+      it.players = await currentPlayers(id);
+      it.playersOf = id === it.appid ? 'self' : 'parent';
+    }));
+  }
+  return items;
 }
 
 // ---------- 실시간 접속자 수 (공식 API, 키 불필요, 3분 캐시) ----------
@@ -159,10 +190,14 @@ async function currentPlayers(appid) {
 // 저장된 장르별 할인 목록에 현재 접속자 수를 합쳐 돌려준다
 async function loadDealsWithPlayers() {
   const store = loadDeals();
-  const withPlayers = async (items) => Promise.all((items || []).map(async (it) => ({ ...it, players: await currentPlayers(it.appid) })));
+  const withPlayers = async (items) => Promise.all((items || []).map(async (it) => {
+    const id = playersAppid(it);
+    const live = await currentPlayers(id);
+    return { ...it, players: live == null ? it.players ?? null : live, playersOf: id === it.appid ? 'self' : 'parent' };
+  }));
   const genres = await Promise.all((store.genres || []).map(async (g) => ({ ...g, items: await withPlayers(g.items) })));
   return { ...store, genres, items: genres.flatMap((g) => g.items), playersAt: new Date().toISOString() };
 }
 
-module.exports = { run, loadDeals, loadDealsWithPlayers, currentPlayers, GENRES };
+module.exports = { run, loadDeals, loadDealsWithPlayers, currentPlayers, scoreOf, GENRES, RANKING_DESC };
 if (require.main === module) run().then((r) => { console.log(r); process.exit(r.ok ? 0 : 1); });
