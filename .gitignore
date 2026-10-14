@@ -1,4 +1,5 @@
 node_modules/
 logs/
 .env
-store/*.tmp
+# 수집 결과(로컬 백업용). 배포는 MySQL 을 쓰므로 저장소에서는 추적하지 않는다.
+store/
