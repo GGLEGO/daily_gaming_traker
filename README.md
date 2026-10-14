@@ -63,6 +63,7 @@ base.js                공통 수집 루틴 (HTTP 요청, HTML 정리, 저장소
 harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 생성
 storage/               저장 계층. index.js 가 백엔드를 고른다: json.js(store/*.json 파일, 게임당 40건) | mysql.js(sql/update.sql 스키마, 상한 없음, FULLTEXT 검색)
 scripts/               db-init.js(스키마 적용), migrate-json-to-mysql.js(store/*.json → MySQL 이전)
+ecosystem.config.js    PM2 설정 (배포용, 단일 인스턴스). 배포 과정은 DEPLOY.md 참고
 run.js                 에이전트 수동 실행 CLI (node run.js [게임])
 game/
   index.js             게임 에이전트 등록부 + 장르 목록 (회사 폴더를 자동으로 모은다)
