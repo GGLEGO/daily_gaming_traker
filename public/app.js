@@ -114,7 +114,6 @@
     const track = $('#deals-track');
     const dots = $('#deals-dots');
     const tabs = $('#deals-genres');
-    $('#deals-updated').textContent = (data.updatedAt ? `갱신 ${relTime(data.updatedAt)}` : '') + (data.ranking ? ` · 순위 = ${data.ranking}` : '');
     box.hidden = false;
 
     // 무료 배포(100% 할인) 항목은 배지·가격·문구를 "무료"로 보여주고, DLC 면 본편 이름을 함께 표시한다
@@ -179,7 +178,6 @@
       if (!ng.length) return;
       genres = ng;
       if (tabs) tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
-      $('#deals-updated').textContent = (fresh.updatedAt ? `갱신 ${relTime(fresh.updatedAt)}` : '') + (fresh.ranking ? ` · 순위 = ${fresh.ranking}` : '');
       showGenre(genres.find((g) => g.id === current.id) ? current.id : genres[0].id, idx);
     }
     setInterval(refreshDeals, 5 * 60 * 1000);
