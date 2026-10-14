@@ -2,13 +2,10 @@
 // 원본: Steam 상점 검색 - 장르 태그별로 할인 중(specials=1)인 인기 게임(topsellers 50개)을 받아,
 // 동시 접속자 × 할인율 점수(scoreOf)가 높은 순으로 장르마다 상위 N개를 저장한다.
 // 여기에 100% 할인으로 무료 배포 중인 항목(maxprice=free)을 "무료 배포" 탭으로 함께 저장한다.
-const fs = require('fs');
-const path = require('path');
 const cheerio = require('cheerio');
-const { fetchText, log, DATA_DIR } = require('../base');
+const { fetchText, log, storage } = require('../base');
 
 const COUNT = 5;
-const STORE_PATH = path.join(DATA_DIR, 'steam_deals.json');
 const COOKIE = 'birthtime=0; lastagecheckage=1-0-1990; wants_mature_content=1; Steam_Language=koreana';
 
 // 사이트의 게임 장르와 같은 구분. tags 는 Steam 사용자 태그 ID (여러 개면 각각 조회해 합친다)
@@ -28,8 +25,9 @@ const FREE_URL = 'https://store.steampowered.com/search/results/?query&start=0&c
 const FREE_COUNT = 8;
 const TYPE_LABEL = { game: '게임', dlc: 'DLC', demo: '데모', music: '사운드트랙', video: '영상' };
 
-function loadDeals() {
-  try { return JSON.parse(fs.readFileSync(STORE_PATH, 'utf8')); } catch (e) { return { updatedAt: null, lastError: null, genres: [], items: [] }; }
+// 저장 계층(JSON 파일 또는 MySQL app_state)에서 마지막 수집 결과를 읽는다
+async function loadDeals() {
+  try { return await storage.loadDeals(); } catch (e) { return { updatedAt: null, lastError: null, genres: [], items: [] }; }
 }
 
 function parse(json) {
@@ -91,7 +89,7 @@ async function enrich(items, expirations) {
 }
 
 async function run() {
-  const store = loadDeals();
+  const store = await loadDeals();
   log('steam', '장르별 할인 게임 수집 시작');
   try {
     // 할인 종료 시각: 추천 카테고리 API(specials 등)에 정확한 시각이 있는 경우를 먼저 모아 둔다
@@ -134,12 +132,12 @@ async function run() {
     } catch (e) { log('steam', `무료 배포 조회 실패: ${e.message}`); }
 
     const next = { updatedAt: new Date().toISOString(), lastError: null, source: 'Steam 상점 · 장르별 인기(동시 접속자)×할인율 순 + 무료 배포', ranking: RANKING_DESC, genres, items: genres.flatMap((g) => g.items) };
-    fs.writeFileSync(STORE_PATH, JSON.stringify(next, null, 2));
+    await storage.saveDeals(next);
     log('steam', `완료: ${genres.map((g) => `${g.label} ${g.items.length}개`).join(', ')}`);
     return { ok: true, count: next.items.length };
   } catch (e) {
     store.lastError = `${new Date().toISOString()} ${e.message}`;
-    fs.writeFileSync(STORE_PATH, JSON.stringify(store, null, 2));
+    try { await storage.saveDeals(store); } catch (e2) { log('steam', `실패 기록도 실패: ${e2.message}`); }
     log('steam', `실패: ${e.message}`);
     return { ok: false, error: e.message };
   }
@@ -189,7 +187,7 @@ async function currentPlayers(appid) {
 
 // 저장된 장르별 할인 목록에 현재 접속자 수를 합쳐 돌려준다
 async function loadDealsWithPlayers() {
-  const store = loadDeals();
+  const store = await loadDeals();
   const withPlayers = async (items) => Promise.all((items || []).map(async (it) => {
     const id = playersAppid(it);
     const live = await currentPlayers(id);
@@ -200,4 +198,4 @@ async function loadDealsWithPlayers() {
 }
 
 module.exports = { run, loadDeals, loadDealsWithPlayers, currentPlayers, scoreOf, GENRES, RANKING_DESC };
-if (require.main === module) run().then((r) => { console.log(r); process.exit(r.ok ? 0 : 1); });
+if (require.main === module) storage.init().then(run).then(async (r) => { await storage.close(); console.log(r); process.exit(r.ok ? 0 : 1); });

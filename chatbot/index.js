@@ -6,20 +6,11 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const Anthropic = require('@anthropic-ai/sdk');
+require('../config'); // .env (ANTHROPIC_API_KEY 등) 를 먼저 읽는다
 const { AGENTS, GAME_IDS } = require('../game/index');
-const { loadStore, textOf } = require('../base');
+const { storage, textOf } = require('../base');
 const streams = require('../stream');
 const esports = require('../scheduler/esports');
-
-// .env 파일(프로젝트 루트)에서 ANTHROPIC_API_KEY 등을 읽는다 (환경변수가 이미 있으면 그대로 둔다)
-(function loadDotEnv() {
-  const p = path.join(__dirname, '..', '.env');
-  if (!fs.existsSync(p)) return;
-  for (const line of fs.readFileSync(p, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
-  }
-})();
 
 const MODEL = process.env.CHATBOT_MODEL || 'claude-opus-5-5';
 const MAX_TURNS = 12;        // 클라이언트가 보내는 최근 대화 수
@@ -38,38 +29,37 @@ function resolveGame(input) {
     || GAME_IDS.find((id) => AGENTS[id].label.toLowerCase().includes(q) || q.includes(AGENTS[id].label.toLowerCase()) || AGENTS[id].tagline.includes(q));
   return hit || null;
 }
-const textCache = new Map();
-function plain(game, it) {
-  const k = `${game}/${it.id}/${it.fetchedAt}`;
-  if (!textCache.has(k)) textCache.set(k, textOf(it.html || ''));
-  return textCache.get(k);
-}
-function searchPatchNotes({ query, game, limit = 5 }) {
+async function searchPatchNotes({ query, game, limit = 5 }) {
   const words = String(query || '').toLowerCase().split(/\s+/).filter(Boolean);
-  const ids = game ? [resolveGame(game)].filter(Boolean) : GAME_IDS;
+  const gameId = game ? resolveGame(game) : null;
+  if (game && !gameId) return [];
   const out = [];
-  for (const id of ids) {
-    const s = loadStore(id, {});
-    for (const it of s.items) {
-      const title = (it.title || '').toLowerCase();
-      const body = plain(id, it);
-      const lower = body.toLowerCase();
-      if (words.length && !words.every((w) => title.includes(w) || lower.includes(w))) continue;
-      const pos = words.length ? lower.indexOf(words[0]) : -1;
+  if (!words.length) {
+    // 검색어가 없으면 최신 글을 돌려준다
+    for (const id of gameId ? [gameId] : GAME_IDS) {
+      const s = await storage.loadStore(id, {}, { html: false, limit });
+      for (const it of s.items) out.push({ game: id, gameLabel: AGENTS[id].label, title: it.title, publishedAt: it.publishedAt, url: `/${id}/${encodeURIComponent(it.id)}`, source: it.url, excerpt: it.summary || '' });
+    }
+  } else {
+    const r = await storage.search(words, { game: gameId, gameIds: GAME_IDS, limit: Math.max(limit * 4, 20) });
+    for (const it of r.items) {
+      if (!AGENTS[it.game]) continue;
+      const body = it.plain || '';
+      const pos = body.toLowerCase().indexOf(words[0]);
       const excerpt = pos >= 0 ? body.slice(Math.max(0, pos - 200), pos + 400) : body.slice(0, 400);
-      out.push({ game: id, gameLabel: AGENTS[id].label, title: it.title, publishedAt: it.publishedAt, url: `/${id}/${encodeURIComponent(it.id)}`, source: it.url, excerpt });
+      out.push({ game: it.game, gameLabel: AGENTS[it.game].label, title: it.title, publishedAt: it.publishedAt, url: `/${it.game}/${encodeURIComponent(it.id)}`, source: it.url, excerpt });
     }
   }
   out.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
   return out.slice(0, limit);
 }
-function latestPatch({ game, full = false }) {
+async function latestPatch({ game, full = false }) {
   const id = resolveGame(game);
   if (!id) return { error: `알 수 없는 게임: ${game}. 가능한 게임: ${GAME_IDS.map((g) => AGENTS[g].label).join(', ')}` };
-  const s = loadStore(id, {});
-  const it = s.items[0];
-  if (!it) return { game: id, gameLabel: AGENTS[id].label, error: '아직 수집된 패치가 없습니다.' };
-  const body = plain(id, it);
+  const s = await storage.loadStore(id, {}, { html: false, limit: 6 });
+  if (!s.items.length) return { game: id, gameLabel: AGENTS[id].label, error: '아직 수집된 패치가 없습니다.' };
+  const it = await storage.getItem(id, s.items[0].id);
+  const body = textOf(it.html || '');
   return { game: id, gameLabel: AGENTS[id].label, title: it.title, publishedAt: it.publishedAt, url: `/${id}/${encodeURIComponent(it.id)}`, source: it.url, content: full ? body.slice(0, 6000) : body.slice(0, 1500), history: s.items.slice(1, 6).map((x) => ({ title: x.title, publishedAt: x.publishedAt })) };
 }
 
@@ -125,8 +115,11 @@ const TOOLS = [
 
 async function runTool(name, input) {
   switch (name) {
-    case 'list_games':
-      return GAME_IDS.map((id) => { const s = loadStore(id, {}); return { ...gameMeta(id), latest: s.items[0] ? { title: s.items[0].title, publishedAt: s.items[0].publishedAt } : null }; });
+    case 'list_games': {
+      const out = [];
+      for (const id of GAME_IDS) { const s = await storage.loadStore(id, {}, { html: false, limit: 1 }); out.push({ ...gameMeta(id), latest: s.items[0] ? { title: s.items[0].title, publishedAt: s.items[0].publishedAt } : null }); }
+      return out;
+    }
     case 'search_patch_notes':
       return searchPatchNotes({ query: input.query, game: input.game || null, limit: Math.min(Number(input.limit) || 5, 10) });
     case 'get_latest_patch':
@@ -172,14 +165,14 @@ function dynamicContext() {
 }
 
 // ---------- API 키 없이 동작하는 안내 모드 ----------
-function fallbackReply(userText) {
+async function fallbackReply(userText) {
   // 문장 전체로 먼저 찾고, 없으면 단어별로 찾아 합친다 (조사·물음표 등은 제거)
   const clean = String(userText).replace(/[?？!！.,、]/g, ' ');
-  let hits = searchPatchNotes({ query: clean, game: null, limit: 3 });
+  let hits = await searchPatchNotes({ query: clean, game: null, limit: 3 });
   if (!hits.length) {
     const words = clean.split(/\s+/).map((w) => w.replace(/(은|는|이|가|을|를|의|에서|으로|로|도|과|와|에|에게|부터|까지)$/, '')).filter((w) => w.length >= 2 && !/^(어떻게|어떤|뭐|무엇|알려줘|알려|바뀌|변경|패치|업데이트|최신|요약|있어|있나|해줘|좀)/.test(w));
     const seen = new Set();
-    for (const w of words) for (const h of searchPatchNotes({ query: w, game: null, limit: 3 })) { const k = h.game + h.title; if (!seen.has(k)) { seen.add(k); hits.push(h); } }
+    for (const w of words) for (const h of await searchPatchNotes({ query: w, game: null, limit: 3 })) { const k = h.game + h.title; if (!seen.has(k)) { seen.add(k); hits.push(h); } }
     hits = hits.slice(0, 5);
   }
   const head = 'AI 응답 기능이 꺼져 있어 패치 노트 검색 결과만 보여드립니다. (서버에 ANTHROPIC_API_KEY 를 설정하면 Claude 가 답변합니다)';
@@ -263,10 +256,10 @@ function createChatRouter() {
         || (is(Anthropic.APIError) && e.status === 401)
         || /could not resolve authentication|api ?key|auth ?token/i.test((e && e.message) || '');
       if (noCredential) {
-        return res.json({ reply: fallbackReply(userText), toolsUsed: ['search_patch_notes'], mode: 'fallback' });
+        return res.json({ reply: await fallbackReply(userText), toolsUsed: ['search_patch_notes'], mode: 'fallback' });
       }
       if (e instanceof Anthropic.RateLimitError) return res.status(429).json({ error: 'AI 서비스 사용량이 많습니다. 잠시 후 다시 시도해 주세요.' });
-      if (e instanceof Anthropic.APIConnectionError) return res.json({ reply: fallbackReply(userText), toolsUsed: ['search_patch_notes'], mode: 'fallback', note: 'AI 서비스에 연결하지 못했습니다.' });
+      if (e instanceof Anthropic.APIConnectionError) return res.json({ reply: await fallbackReply(userText), toolsUsed: ['search_patch_notes'], mode: 'fallback', note: 'AI 서비스에 연결하지 못했습니다.' });
       if (e instanceof Anthropic.APIError) return res.status(502).json({ error: `AI 서비스 오류 (${e.status}): ${e.message}` });
       console.error('[chatbot]', e);
       res.status(500).json({ error: '챗봇 처리 중 오류가 났습니다.' });

@@ -31,18 +31,37 @@ node run.js lol            # 한 게임만 (lol | overwatch | valorant | tft | l
 | 변수 | 기본값 | 설명 |
 | --- | --- | --- |
 | `PORT` | `3000` | 서버 포트 |
+| `STORAGE` | `json` | 저장 방식. `json`(store/*.json 파일, 로컬) 또는 `mysql`(배포). `DATABASE_URL`/`MYSQL_HOST` 가 있으면 자동으로 mysql |
+| `DATABASE_URL` | - | `mysql://user:pass@host:3306/daily_gaming_tracker`. 대신 `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE` 를 써도 됨 |
 | `PATCH_CHECK_CRON` | `0 9 * * *` | 수집 주기 (cron 표현식, 24시간 주기) |
 | `PATCH_CHECK_TZ` | `Asia/Seoul` | cron 시간대 |
 | `STEAM_CHECK_CRON` | `0 */6 * * *` | Steam 할인 갱신 주기 (6시간) |
 | `ANTHROPIC_API_KEY` | - | 챗봇용 Claude API 키 (.env 파일에 넣어도 됨). 없으면 챗봇이 검색 안내 모드로 동작 |
 | `DISABLE_SCHEDULER` | - | `1` 이면 서버만 띄우고 스케줄러를 끔 |
 
+## 저장 방식 (JSON 파일 → MySQL)
+
+로컬에서는 설정 없이 `store/*.json` 파일에 저장합니다(게임당 최신 40건). 배포할 때는 MySQL 로 바꿉니다. 에이전트·하네스·API 코드는 그대로이고 `storage/` 백엔드만 바뀝니다.
+
+```bash
+cp .env.example .env           # STORAGE=mysql 과 MySQL 접속 정보를 적는다
+npm run db:init                # sql/update.sql 스키마 적용 (데이터베이스가 없으면 만든다)
+npm run db:migrate             # 지금까지 store/*.json 에 모은 패치·수정 이력·이벤트·Steam 결과를 MySQL 로 이전
+npm start                      # 시작 로그에 "저장 방식: mysql" 이 찍히면 전환 완료
+```
+
+MySQL 모드에서는 보관 상한이 없어 모든 패치가 영구 보관되고, 검색은 ngram FULLTEXT 인덱스를 씁니다. 원문 수정 이력은 `patch_revisions`, 변경 이벤트는 `change_events` 표에 쌓입니다.
+MySQL 서버가 없는 PC 에서는 `STORAGE=json` 그대로 두면 됩니다.
+
 ## 구조
 
 ```
-server.js              Express 서버 (정적 파일 + API + 스케줄러 시작)
+server.js              Express 서버 (정적 파일 + API + 스케줄러 시작). 데이터 접근은 모두 storage/ 를 거친다
+config.js              .env 로딩, 저장 방식(STORAGE=json | mysql)과 MySQL 접속 설정
 base.js                공통 수집 루틴 (HTTP 요청, HTML 정리, 저장소, 로그) - 모든 에이전트와 수집기가 사용
-harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 기록(store/changes.json)
+harness.js             하네스 층: 본문 해시 비교로 원문 수정 감지, 이전 버전 이력(revisions), 변경 이벤트 생성
+storage/               저장 계층. index.js 가 백엔드를 고른다: json.js(store/*.json 파일, 게임당 40건) | mysql.js(sql/update.sql 스키마, 상한 없음, FULLTEXT 검색)
+scripts/               db-init.js(스키마 적용), migrate-json-to-mysql.js(store/*.json → MySQL 이전)
 run.js                 에이전트 수동 실행 CLI (node run.js [게임])
 game/
   index.js             게임 에이전트 등록부 + 장르 목록 (회사 폴더를 자동으로 모은다)
@@ -55,8 +74,8 @@ game/
   nimbleneuron/        Nimble Neuron - 패치노트 API + 게시글 본문 파서, data/eternalreturn.js
   krafton/             Krafton      - Nuxt 상태 데이터 파서, data/pubg.js
   ncsoft/              NCSoft       - plaync 커뮤니티 API 파서, data/aion2.js
-store/<game>.json      수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
-store/changes.json     하네스가 기록한 변경 이벤트 (new / updated / error, 최근 300건)
+store/<game>.json      [STORAGE=json] 수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
+store/changes.json     [STORAGE=json] 변경 이벤트 (new / backfill / updated / error, 최근 300건)
 logs/agents.log        수집 로그
 public/                프론트엔드 (index.html 홈, game.html 게임 페이지, style.css, app.js)
 chatbot/               사이트 챗봇 (index.js 서버 라우터, public/widget.js·widget.css 위젯)

@@ -3,7 +3,7 @@
 // 최신 페이지는 현재 달 패치만 보여주므로, 저장된 패치가 적을 때는 이전 달 아카이브도 함께 확인한다.
 const path = require('path');
 const cheerio = require('cheerio');
-const { defineAgent, loadGameData, runCli, fetchText, loadStore, log } = require('../../base');
+const { defineAgent, loadGameData, runCli, fetchText, storage, log } = require('../../base');
 
 function parseKoreanDate(s) {
   // "2026년 10월 6일" 또는 "patch-2026-10-06" -> 2026-10-06T00:00:00+09:00
@@ -49,8 +49,8 @@ async function listPatches(d) {
   const items = parsePage(html, d.sourceUrl);
   if (!items.length) throw new Error('.PatchNotes-patch 블록을 찾지 못함 (페이지 구조 변경?)');
 
-  const store = loadStore(d.game, {});
-  if (store.items.length < d.minSeed) {
+  const stored = await storage.countItems(d.game);
+  if (stored < d.minSeed) {
     // 최신 패치의 달을 기준으로 이전 달 아카이브를 추가 수집 (최초 실행 시 이력 확보용)
     const latest = items[0].publishedAt ? new Date(items[0].publishedAt) : new Date();
     let y = latest.getFullYear(), m = latest.getMonth() + 1;

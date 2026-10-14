@@ -15,7 +15,7 @@ async function runAll(reason = 'scheduled') {
   state.running = true;
   log('scheduler', `전체 에이전트 실행 (${reason})`);
   try {
-    for (const g of GAME_IDS) state.lastResults[g] = await AGENTS[g].run();
+    for (const g of GAME_IDS) state.lastResults[g] = await AGENTS[g].run({ reason });
     state.lastResults.steam = await steam.run();
     state.lastRunAt = new Date().toISOString();
   } finally {

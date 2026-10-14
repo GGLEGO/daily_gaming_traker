@@ -2,8 +2,8 @@
   "game": "overwatch",
   "name": "Overwatch",
   "sourceUrl": "https://overwatch.blizzard.com/ko-kr/news/patch-notes/",
-  "lastRun": "2026-10-14T00:00:00.597Z",
-  "lastSuccess": "2026-10-14T00:00:01.132Z",
+  "lastRun": "2026-10-14T09:03:32.017Z",
+  "lastSuccess": "2026-10-14T09:03:32.449Z",
   "lastError": null,
   "items": [
     {
@@ -128,6 +128,6 @@
       "contentHash": "a7daa203c17c128905c5ab39553348a2a8030958"
     }
   ],
-  "newCount": 1,
+  "newCount": 0,
   "updatedCount": 0
 }

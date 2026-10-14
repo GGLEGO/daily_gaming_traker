@@ -145,6 +145,16 @@ CREATE TABLE IF NOT EXISTS change_events (
 ) ENGINE=InnoDB COMMENT='신규·수정·오류 이벤트 (최근 변경 피드)';
 
 -- ---------------------------------------------------------------------
+-- 5-1. 기타 상태 (Steam 할인 수집 결과 등 패치가 아닌 JSON 덩어리)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS app_state (
+  name        VARCHAR(64) NOT NULL COMMENT 'steam_deals 등',
+  value       JSON        NOT NULL,
+  updated_at  DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (name)
+) ENGINE=InnoDB COMMENT='패치 외 수집 결과 (JSON)';
+
+-- ---------------------------------------------------------------------
 -- 6. 뷰: API 가 바로 쓰는 모양
 -- ---------------------------------------------------------------------
 

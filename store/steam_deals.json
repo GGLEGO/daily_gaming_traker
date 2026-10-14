@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T00:00:45.020Z",
+  "updatedAt": "2026-10-14T09:00:15.876Z",
   "lastError": null,
   "source": "Steam 상점 · 장르별 할인율 순",
   "genres": [
@@ -54,33 +54,33 @@
           "discountEndsText": null
         },
         {
-          "appid": "612880",
-          "name": "Wolfenstein II: The New Colossus",
-          "discount": 85,
-          "originalPrice": "₩ 44,500",
-          "finalPrice": "₩ 6,670",
-          "url": "https://store.steampowered.com/app/612880/",
-          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/612880/header.jpg?t=1750784115",
-          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/612880/capsule_231x87.jpg?t=1750784115",
-          "review": "positive",
-          "reviewText": "대체로 긍정적",
-          "released": "2017년 10월 26일",
-          "discountEndsAt": "2026-10-15T17:00:00.000Z",
+          "appid": "368070",
+          "name": "Sniper Ghost Warrior 3",
+          "discount": 90,
+          "originalPrice": "₩ 21,000",
+          "finalPrice": "₩ 2,100",
+          "url": "https://store.steampowered.com/app/368070/",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/368070/header.jpg?t=1728377817",
+          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/368070/capsule_231x87.jpg?t=1728377817",
+          "review": "mixed",
+          "reviewText": "복합적",
+          "released": "2017년 4월 24일",
+          "discountEndsAt": "2026-10-19T23:59:00+09:00",
           "discountEndsText": null
         },
         {
-          "appid": "552500",
-          "name": "Warhammer: Vermintide 2",
-          "discount": 85,
-          "originalPrice": "₩ 32,000",
-          "finalPrice": "₩ 4,800",
-          "url": "https://store.steampowered.com/app/552500/",
-          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/552500/header.jpg?t=1764008361",
-          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/552500/capsule_231x87.jpg?t=1764008361",
-          "review": "positive",
-          "reviewText": "매우 긍정적",
-          "released": "2018년 3월 8일",
-          "discountEndsAt": "2026-10-26T23:59:00+09:00",
+          "appid": "973580",
+          "name": "Sniper Ghost Warrior Contracts",
+          "discount": 90,
+          "originalPrice": "₩ 31,000",
+          "finalPrice": "₩ 3,100",
+          "url": "https://store.steampowered.com/app/973580/",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/973580/header.jpg?t=1741954017",
+          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/973580/capsule_231x87.jpg?t=1741954017",
+          "review": "mixed",
+          "reviewText": "복합적",
+          "released": "2019년 11월 22일",
+          "discountEndsAt": "2026-10-19T23:59:00+09:00",
           "discountEndsText": null
         }
       ]
@@ -90,6 +90,21 @@
       "label": "RPG",
       "desc": "MMORPG · 액션 RPG",
       "items": [
+        {
+          "appid": "1283400",
+          "name": "Steelrising",
+          "discount": 90,
+          "originalPrice": "₩ 31,000",
+          "finalPrice": "₩ 3,100",
+          "url": "https://store.steampowered.com/app/1283400/",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1778174679",
+          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/capsule_231x87.jpg?t=1778174679",
+          "review": "positive",
+          "reviewText": "대체로 긍정적",
+          "released": "2022년 9월 8일",
+          "discountEndsAt": "2026-10-22T23:59:00+09:00",
+          "discountEndsText": null
+        },
         {
           "appid": "894020",
           "name": "Death's Door",
@@ -133,21 +148,6 @@
           "reviewText": "대체로 긍정적",
           "released": "2020년 4월 14일",
           "discountEndsAt": "2026-10-23T23:59:00+09:00",
-          "discountEndsText": null
-        },
-        {
-          "appid": "2072450",
-          "name": "용과 같이8",
-          "discount": 75,
-          "originalPrice": "₩ 79,800",
-          "finalPrice": "₩ 19,950",
-          "url": "https://store.steampowered.com/app/2072450/",
-          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/header_koreana.jpg?t=1781262996",
-          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2072450/capsule_231x87_koreana.jpg?t=1781262996",
-          "review": "positive",
-          "reviewText": "매우 긍정적",
-          "released": "2024년 1월 25일",
-          "discountEndsAt": "2026-10-15T17:00:00.000Z",
           "discountEndsText": null
         },
         {
@@ -255,6 +255,21 @@
       "desc": "스포츠",
       "items": [
         {
+          "appid": "1346010",
+          "name": "RiMS Racing",
+          "discount": 95,
+          "originalPrice": "₩ 21,000",
+          "finalPrice": "₩ 1,050",
+          "url": "https://store.steampowered.com/app/1346010/",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1346010/header.jpg?t=1759396011",
+          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1346010/capsule_231x87.jpg?t=1759396011",
+          "review": "mixed",
+          "reviewText": "복합적",
+          "released": "2021년 8월 19일",
+          "discountEndsAt": "2026-10-22T23:59:00+09:00",
+          "discountEndsText": null
+        },
+        {
           "appid": "468920",
           "name": "Ultimate Fishing Simulator®",
           "discount": 94,
@@ -313,21 +328,6 @@
           "released": "2020년 9월 28일",
           "discountEndsAt": "2026-10-22T23:59:00+09:00",
           "discountEndsText": null
-        },
-        {
-          "appid": "1137540",
-          "name": "Ultimate Fishing® Simulator - VR DLC",
-          "discount": 86,
-          "originalPrice": "₩ 15,510",
-          "finalPrice": "₩ 2,110",
-          "url": "https://store.steampowered.com/app/1137540/",
-          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1137540/header.jpg?t=1786634816",
-          "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1137540/capsule_231x87.jpg?t=1786634816",
-          "review": "mixed",
-          "reviewText": "복합적",
-          "released": "2019년 8월 30일",
-          "discountEndsAt": "2026-10-19T23:59:00+09:00",
-          "discountEndsText": null
         }
       ]
     }
@@ -379,33 +379,48 @@
       "discountEndsText": null
     },
     {
-      "appid": "612880",
-      "name": "Wolfenstein II: The New Colossus",
-      "discount": 85,
-      "originalPrice": "₩ 44,500",
-      "finalPrice": "₩ 6,670",
-      "url": "https://store.steampowered.com/app/612880/",
-      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/612880/header.jpg?t=1750784115",
-      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/612880/capsule_231x87.jpg?t=1750784115",
-      "review": "positive",
-      "reviewText": "대체로 긍정적",
-      "released": "2017년 10월 26일",
-      "discountEndsAt": "2026-10-15T17:00:00.000Z",
+      "appid": "368070",
+      "name": "Sniper Ghost Warrior 3",
+      "discount": 90,
+      "originalPrice": "₩ 21,000",
+      "finalPrice": "₩ 2,100",
+      "url": "https://store.steampowered.com/app/368070/",
+      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/368070/header.jpg?t=1728377817",
+      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/368070/capsule_231x87.jpg?t=1728377817",
+      "review": "mixed",
+      "reviewText": "복합적",
+      "released": "2017년 4월 24일",
+      "discountEndsAt": "2026-10-19T23:59:00+09:00",
       "discountEndsText": null
     },
     {
-      "appid": "552500",
-      "name": "Warhammer: Vermintide 2",
-      "discount": 85,
-      "originalPrice": "₩ 32,000",
-      "finalPrice": "₩ 4,800",
-      "url": "https://store.steampowered.com/app/552500/",
-      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/552500/header.jpg?t=1764008361",
-      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/552500/capsule_231x87.jpg?t=1764008361",
+      "appid": "973580",
+      "name": "Sniper Ghost Warrior Contracts",
+      "discount": 90,
+      "originalPrice": "₩ 31,000",
+      "finalPrice": "₩ 3,100",
+      "url": "https://store.steampowered.com/app/973580/",
+      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/973580/header.jpg?t=1741954017",
+      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/973580/capsule_231x87.jpg?t=1741954017",
+      "review": "mixed",
+      "reviewText": "복합적",
+      "released": "2019년 11월 22일",
+      "discountEndsAt": "2026-10-19T23:59:00+09:00",
+      "discountEndsText": null
+    },
+    {
+      "appid": "1283400",
+      "name": "Steelrising",
+      "discount": 90,
+      "originalPrice": "₩ 31,000",
+      "finalPrice": "₩ 3,100",
+      "url": "https://store.steampowered.com/app/1283400/",
+      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1778174679",
+      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/capsule_231x87.jpg?t=1778174679",
       "review": "positive",
-      "reviewText": "매우 긍정적",
-      "released": "2018년 3월 8일",
-      "discountEndsAt": "2026-10-26T23:59:00+09:00",
+      "reviewText": "대체로 긍정적",
+      "released": "2022년 9월 8일",
+      "discountEndsAt": "2026-10-22T23:59:00+09:00",
       "discountEndsText": null
     },
     {
@@ -451,21 +466,6 @@
       "reviewText": "대체로 긍정적",
       "released": "2020년 4월 14일",
       "discountEndsAt": "2026-10-23T23:59:00+09:00",
-      "discountEndsText": null
-    },
-    {
-      "appid": "2072450",
-      "name": "용과 같이8",
-      "discount": 75,
-      "originalPrice": "₩ 79,800",
-      "finalPrice": "₩ 19,950",
-      "url": "https://store.steampowered.com/app/2072450/",
-      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/header_koreana.jpg?t=1781262996",
-      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2072450/capsule_231x87_koreana.jpg?t=1781262996",
-      "review": "positive",
-      "reviewText": "매우 긍정적",
-      "released": "2024년 1월 25일",
-      "discountEndsAt": "2026-10-15T17:00:00.000Z",
       "discountEndsText": null
     },
     {
@@ -559,6 +559,21 @@
       "discountEndsText": null
     },
     {
+      "appid": "1346010",
+      "name": "RiMS Racing",
+      "discount": 95,
+      "originalPrice": "₩ 21,000",
+      "finalPrice": "₩ 1,050",
+      "url": "https://store.steampowered.com/app/1346010/",
+      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1346010/header.jpg?t=1759396011",
+      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1346010/capsule_231x87.jpg?t=1759396011",
+      "review": "mixed",
+      "reviewText": "복합적",
+      "released": "2021년 8월 19일",
+      "discountEndsAt": "2026-10-22T23:59:00+09:00",
+      "discountEndsText": null
+    },
+    {
       "appid": "468920",
       "name": "Ultimate Fishing Simulator®",
       "discount": 94,
@@ -616,21 +631,6 @@
       "reviewText": "대체로 긍정적",
       "released": "2020년 9월 28일",
       "discountEndsAt": "2026-10-22T23:59:00+09:00",
-      "discountEndsText": null
-    },
-    {
-      "appid": "1137540",
-      "name": "Ultimate Fishing® Simulator - VR DLC",
-      "discount": 86,
-      "originalPrice": "₩ 15,510",
-      "finalPrice": "₩ 2,110",
-      "url": "https://store.steampowered.com/app/1137540/",
-      "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1137540/header.jpg?t=1786634816",
-      "capsule": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1137540/capsule_231x87.jpg?t=1786634816",
-      "review": "mixed",
-      "reviewText": "복합적",
-      "released": "2019년 8월 30일",
-      "discountEndsAt": "2026-10-19T23:59:00+09:00",
       "discountEndsText": null
     }
   ]

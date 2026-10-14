@@ -22,6 +22,7 @@ for (const dir of companyDirs()) {
   COMPANIES[dir] = { id: dir, name: mod.company || dir, agents: mod.agents };
   for (const a of mod.agents) {
     if (AGENTS[a.id]) throw new Error(`게임 아이디 중복: ${a.id} (${dir})`);
+    a.spec.registry = { ...(a.spec.registry || {}), company: dir, companyName: mod.company || dir };
     AGENTS[a.id] = { ...a, company: dir };
   }
 }

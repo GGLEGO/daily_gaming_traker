@@ -2,8 +2,8 @@
   "game": "aion2",
   "name": "아이온2",
   "sourceUrl": "https://aion2.plaync.com/ko-kr/board/update/list",
-  "lastRun": "2026-10-14T00:00:31.711Z",
-  "lastSuccess": "2026-10-14T00:00:32.422Z",
+  "lastRun": "2026-10-14T09:03:33.402Z",
+  "lastSuccess": "2026-10-14T09:03:34.108Z",
   "lastError": null,
   "items": [
     {
@@ -128,6 +128,6 @@
       "contentHash": "21abaa7073a4bafa4003bb95f2f9064956575ec3"
     }
   ],
-  "newCount": 1,
+  "newCount": 0,
   "updatedCount": 0
 }
