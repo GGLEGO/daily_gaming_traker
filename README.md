@@ -64,6 +64,7 @@ news/                  게임 뉴스 수집기 (index.js, 구글 뉴스 RSS 검�
 steam/                 Steam 할인 수집기 (index.js, 6시간마다): 장르별로 동시 접속자 × 할인율 점수 상위 5개 + 무료 배포(100% 할인), 실시간 접속자 포함
 stream/                실시간 스트리머 방송 수집기 (index.js, SOOP + 치지직, 요청 시 2분 캐시)
 scheduler/             node-cron 24시간 스케줄러 (index.js) + 대회·리그·경기 일정 수집기 (esports.js: lolesports, vlr.gg, Liquipedia TFT, pubgesports, OWCS, 각 게임 공지)
+sql/                   MySQL 스키마 (update.sql: companies·games·agent_runs·patches·patch_revisions·change_events + 뷰, update.mwb: Workbench 모델)
 ```
 
 ## API

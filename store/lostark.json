@@ -2,9 +2,9 @@
   "game": "lostark",
   "name": "로스트아크",
   "sourceUrl": "https://lostark.game.onstove.com/News/Notice/List",
-  "lastRun": "2026-10-13T07:05:10.486Z",
+  "lastRun": "2026-10-14T00:00:24.122Z",
   "lastSuccess": "2026-10-13T07:05:10.946Z",
-  "lastError": null,
+  "lastError": "2026-10-14T00:00:24.323Z 업데이트 내역 공지를 찾지 못함 (페이지 구조 변경?)",
   "items": [
     {
       "id": "notice-13565",

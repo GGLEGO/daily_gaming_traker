@@ -1,6 +1,174 @@
 {
-  "updatedAt": "2026-10-13T07:05:10.460Z",
+  "updatedAt": "2026-10-14T00:00:32.431Z",
   "events": [
+    {
+      "at": "2026-10-14T00:00:32.054Z",
+      "type": "new",
+      "game": "aion2",
+      "id": "article-6ace86b86cfe4756db5b8d81",
+      "title": "[안내] 10/14(수) 업데이트 노트 (수정 10/14 07:02)",
+      "url": "https://aion2.plaync.com/ko-kr/board/update/view?articleId=6ace86b86cfe4756db5b8d81",
+      "publishedAt": "2026-10-13T19:30:00.161Z"
+    },
+    {
+      "at": "2026-10-14T00:00:26.848Z",
+      "type": "new",
+      "game": "fconline",
+      "id": "notice-6312",
+      "title": "10/15(목) 정기점검 (오전 4시 30분 ~ 낮 12시)",
+      "url": "https://fconline.nexon.com/news/notice/view?n4ArticleSN=6312",
+      "publishedAt": "2026-10-13T00:00:00+09:00"
+    },
+    {
+      "at": "2026-10-14T00:00:24.338Z",
+      "type": "error",
+      "game": "lostark",
+      "message": "업데이트 내역 공지를 찾지 못함 (페이지 구조 변경?)"
+    },
+    {
+      "at": "2026-10-14T00:00:14.764Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-6-notes-2025",
+      "title": "전략적 팀 전투 13.6 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-6-notes-2025",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:15.266Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-5-notes-2025",
+      "title": "#1 전략적 팀 전투 13.5 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-5-notes-2025",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:21.624Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-4-notes-2025",
+      "title": "13.4 전략적 팀 전투 패치 노트 (2025)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-4-notes-2025",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:22.242Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-13-3-notes-2025",
+      "title": "#1 13.3 전략적 팀 전투 패치 노트 (2025 수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-13-3-notes-2025",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:22.812Z",
+      "type": "backfill",
+      "game": "tft",
+      "id": "teamfight-tactics-patch-14-24-notes",
+      "title": "[#1] 14.24 전략적 팀 전투 패치 노트 (수정)",
+      "url": "https://teamfighttactics.leagueoflegends.com/ko-kr/news/game-updates/teamfight-tactics-patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:10.337Z",
+      "type": "new",
+      "game": "valorant",
+      "id": "valorant-patch-notes-13-08",
+      "title": "발로란트 13.08 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-13-08",
+      "publishedAt": "2026-10-13T13:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:10.680Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-10-00",
+      "title": "발로란트 10.00 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-10-00",
+      "publishedAt": "2025-01-07T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:10.988Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-11",
+      "title": "발로란트 9.11 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-11",
+      "publishedAt": "2024-12-10T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:11.347Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-10",
+      "title": "발로란트 9.10 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-10",
+      "publishedAt": "2024-11-19T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:11.636Z",
+      "type": "backfill",
+      "game": "valorant",
+      "id": "valorant-patch-notes-9-09",
+      "title": "발로란트 9.09 패치 노트",
+      "url": "https://playvalorant.com/ko-kr/news/game-updates/valorant-patch-notes-9-09",
+      "publishedAt": "2024-11-05T14:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:02.870Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-04-notes",
+      "title": "25.04 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-04-notes",
+      "publishedAt": "2025-02-19T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:03.239Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-2025-s1-3-notes",
+      "title": "2025.S1.3 패치 노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-2025-s1-3-notes",
+      "publishedAt": "2025-02-04T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:03.817Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-2-notes",
+      "title": "2025.S1.2 패치노트",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-2-notes",
+      "publishedAt": "2025-01-22T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:04.659Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-25-s1-1-notes",
+      "title": "#1 2025.S1.1 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-25-s1-1-notes",
+      "publishedAt": "2025-01-07T19:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:05.186Z",
+      "type": "backfill",
+      "game": "lol",
+      "id": "patch-14-24-notes",
+      "title": "[#2] 14.24 패치노트 (수정)",
+      "url": "https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-14-24-notes",
+      "publishedAt": "2024-12-10T21:00:00.000Z"
+    },
+    {
+      "at": "2026-10-14T00:00:01.023Z",
+      "type": "new",
+      "game": "overwatch",
+      "id": "patch-2026-10-13",
+      "title": "Overwatch Retail Patch Notes – October 13, 2026",
+      "url": "https://overwatch.blizzard.com/ko-kr/news/patch-notes/#patch-2026-10-13",
+      "publishedAt": "2026-10-13T00:00:00+09:00"
+    },
     {
       "at": "2026-10-13T07:05:07.986Z",
       "type": "backfill",
