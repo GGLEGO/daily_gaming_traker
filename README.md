@@ -51,7 +51,8 @@ npm start                      # 시작 로그에 "저장 방식: mysql" 이 찍
 ```
 
 MySQL 모드에서는 보관 상한이 없어 모든 패치가 영구 보관되고, 검색은 ngram FULLTEXT 인덱스를 씁니다. 원문 수정 이력은 `patch_revisions`, 변경 이벤트는 `change_events` 표에 쌓입니다.
-MySQL 서버가 없는 PC 에서는 `STORAGE=json` 그대로 두면 됩니다.
+MySQL 서버가 없는 PC 에서는 `STORAGE=json` 그대로 두면 됩니다. `STORAGE=mysql` 인데 MySQL 이 꺼져 있으면 서버가 "시작 실패" 를 찍고 바로 종료되니 MySQL 을 먼저 켜야 합니다.
+`/api/status` 응답의 `storage` 필드로 지금 어느 저장 방식으로 돌고 있는지 확인할 수 있습니다.
 
 ## 구조
 
