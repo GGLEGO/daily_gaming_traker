@@ -342,26 +342,6 @@
     show(wantId || items[0].id, false);
   }
 
-  // ---------- 최근 변경 (하네스 이벤트: 신규 패치 / 원문 수정 반영) ----------
-  async function renderChanges() {
-    const sec = $('#changes');
-    if (!sec) return;
-    try {
-      const data = await getJSON('/api/changes?limit=12');
-      const events = data.events.filter((e) => e.type === 'new' || e.type === 'updated');
-      if (!events.length) return;
-      sec.hidden = false;
-      $('#changes-list').innerHTML = events.map((e) => `
-        <a class="change-item change-${esc(e.type)}" href="/${esc(e.game)}/${encodeURIComponent(e.id)}">
-          <span class="change-type">${e.type === 'new' ? '신규' : '수정'}</span>
-          <span class="badge badge-${esc(e.game)}">${esc(e.gameShort)}</span>
-          <span class="change-title">${esc(e.title)}</span>
-          <span class="change-time">${esc(relTime(e.at))}</span>
-        </a>`).join('');
-      $('#changes-foot').textContent = `에이전트가 원문을 다시 확인해 새 글과 수정된 글을 반영합니다 · 마지막 기록 ${relTime(data.updatedAt)}`;
-    } catch (e) { /* 변경 피드 실패는 조용히 무시 */ }
-  }
-
   // ---------- 게임 뉴스 (구글 뉴스) ----------
   async function renderNews() {
     const box = $('#news');
@@ -431,7 +411,6 @@
   renderNav();
   const page = document.body.dataset.page;
   if (page === 'home') {
-    renderChanges();
     renderDeals();
     renderStreamsHome();
     renderNews();
