@@ -440,3 +440,11 @@ img { max-width: 100%; height: auto; }
 .deal-free .deal-pct { background: var(--accent); color: var(--ink); }
 .deal-keep { font-size: 0.78rem; font-weight: 700; color: var(--accent); align-self: center; }
 .deal-type { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 1px 7px; border-radius: 5px; background: rgba(255,255,255,.14); color: #fff; }
+
+/* 자동 갱신 안내 띠 (게임 패치 페이지) */
+.update-toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 24px); z-index: 60;
+  padding: 11px 20px; border: none; border-radius: 999px; background: var(--accent); color: var(--ink);
+  font: inherit; font-weight: 900; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+.update-toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.update-toast:hover { filter: brightness(1.05); }

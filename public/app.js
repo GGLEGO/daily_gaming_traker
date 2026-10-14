@@ -103,12 +103,13 @@
   async function renderDeals() {
     const box = $('#deals');
     if (!box) return;
-    let data;
-    try { data = await getJSON('/api/deals'); } catch (e) { return; }
     // 장르별(FPS / RPG / AOS / 스포츠) 할인율 상위 5개. 옛 형식(items 만 있음)도 한 탭으로 보여준다
-    const genres = (data.genres && data.genres.length ? data.genres : [{ id: 'all', label: '전체', items: data.items || [] }])
+    const normalize = (d) => (d.genres && d.genres.length ? d.genres : [{ id: 'all', label: '전체', items: d.items || [] }])
       .map((g) => ({ ...g, items: (g.items || []).slice(0, g.free ? 8 : 5) }))
       .filter((g) => g.items.length);
+    let data;
+    try { data = await getJSON('/api/deals'); } catch (e) { return; }
+    let genres = normalize(data);
     if (!genres.length) return;
     const track = $('#deals-track');
     const dots = $('#deals-dots');
@@ -163,10 +164,25 @@
     box.querySelector('.deals-prev').addEventListener('click', () => { go(idx - 1); play(); });
     box.querySelector('.deals-next').addEventListener('click', () => { go(idx + 1); play(); });
     dots.addEventListener('click', (ev) => { const i = [...dots.children].indexOf(ev.target); if (i >= 0) { go(i); play(); } });
-    box.addEventListener('mouseenter', stop);
-    box.addEventListener('mouseleave', play);
+    let hovering = false;
+    box.addEventListener('mouseenter', () => { hovering = true; stop(); });
+    box.addEventListener('mouseleave', () => { hovering = false; play(); });
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
     showGenre(genres[0].id);
+
+    // 자동 갱신: 5분마다 할인 데이터(접속자 수 등)를 다시 받아 보던 장르·위치를 유지한 채 갱신한다
+    async function refreshDeals() {
+      if (document.hidden || hovering) return;
+      let fresh;
+      try { fresh = await getJSON('/api/deals'); } catch (e) { return; }
+      const ng = normalize(fresh);
+      if (!ng.length) return;
+      genres = ng;
+      if (tabs) tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
+      $('#deals-updated').textContent = (fresh.updatedAt ? `갱신 ${relTime(fresh.updatedAt)}` : '') + (fresh.ranking ? ` · 순위 = ${fresh.ranking}` : '');
+      showGenre(genres.find((g) => g.id === current.id) ? current.id : genres[0].id, idx);
+    }
+    setInterval(refreshDeals, 5 * 60 * 1000);
   }
 
   // ---------- 실시간 스트리머 방송 (SOOP + 치지직) ----------
@@ -299,8 +315,10 @@
     const list = $('#patch-list');
     list.innerHTML = items.map((it) => `<li><a href="/${game}/${encodeURIComponent(it.id)}" data-id="${esc(it.id)}"><span>${esc(it.title)}</span><span class="meta">${fmtDate(it.publishedAt)}${it.updatedAt ? ' <span class="rev-badge" title="원문 수정 반영 ' + esc(fmtDate(it.updatedAt, true)) + '">수정</span>' : ''}</span></a></li>`).join('');
 
+    let shownId = wantId || items[0].id;
     async function show(id, push) {
       const target = items.find((x) => x.id === id) || items[0];
+      shownId = target.id;
       list.querySelectorAll('a').forEach((a) => a.classList.toggle('active', a.dataset.id === target.id));
       const art = $('#patch-article');
       art.innerHTML = '<div class="card skeleton tall"></div>';
@@ -340,6 +358,35 @@
     });
 
     show(wantId || items[0].id, false);
+
+    // 자동 갱신: 5분마다 목록을 다시 확인한다. 새 패치가 올라오거나 보고 있는 패치가 수정되면
+    // 읽는 중 내용을 갑자기 바꾸지 않고, 눌러서 새로고침하는 안내 띠를 띄운다.
+    const updatedAtOf = (arr) => Object.fromEntries(arr.map((it) => [it.id, it.updatedAt || '']));
+    const baseline = updatedAtOf(items);
+    const firstId = items[0].id;
+    let pollTimer = setInterval(async () => {
+      if (document.hidden) return;
+      let fresh;
+      try { fresh = await getJSON(`/api/${game}/patches`); } catch (e) { return; }
+      if (!fresh.items.length) return;
+      const map = updatedAtOf(fresh.items);
+      const isNew = fresh.items[0].id !== firstId;
+      const shownChanged = (map[shownId] || '') !== (baseline[shownId] || '');
+      if (isNew || shownChanged) {
+        clearInterval(pollTimer);
+        let t = document.getElementById('update-toast');
+        if (!t) {
+          t = document.createElement('button');
+          t.id = 'update-toast';
+          t.className = 'update-toast';
+          t.type = 'button';
+          t.addEventListener('click', () => location.reload());
+          document.body.appendChild(t);
+        }
+        t.textContent = (isNew ? '🔄 새 패치가 올라왔습니다' : '🔄 이 패치가 수정되었습니다') + ' · 새로고침';
+        requestAnimationFrame(() => t.classList.add('show'));
+      }
+    }, 5 * 60 * 1000);
   }
 
   // ---------- 게임 뉴스 (구글 뉴스) ----------
