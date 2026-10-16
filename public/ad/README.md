@@ -33,19 +33,17 @@
 
 `ads.js` 의 `AD_UNITS` 에서 해당 슬롯을 켜고 코드를 문자열로 넣습니다.
 
-### 구글 애드센스
-1. `<head>` 에 애드센스 로더를 한 번 추가 (ca-pub 번호는 본인 것):
-   ```html
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-   ```
-2. `ads.js` 에서:
-   ```js
-   sidebar: {
-     enabled: true,
-     html: '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>'
-   }
-   ```
-   (`ads.js` 가 문자열 안의 `<script>` 를 실행해 주므로 push 가 자동으로 호출됩니다. 문자열 안에서는 `</script>` 를 `<\/script>` 로 써야 합니다.)
+### 구글 애드센스 (게시자 ID: ca-pub-7678879723413419 — 이미 설정됨)
+1. **로더는 이미 추가됨.** `index.html`, `game.html`, `search.html`, `404.html` 의 `<head>` 에
+   `adsbygoogle.js?client=ca-pub-7678879723413419` 로더가 들어가 있습니다. 애드센스 사이트 승인은 이 상태로 신청하면 됩니다.
+2. **사이드바에 실제 광고를 켜려면:** 애드센스 대시보드 → 광고 → 광고 단위 → "디스플레이 광고" 를 하나 만들고
+   받은 **data-ad-slot 번호**(예: 1234567890)를 복사합니다.
+3. `ads.js` 의 `AD_UNITS.sidebar` 에서 `data-ad-slot="0000000000"` 의 번호를 그 값으로 바꾸고 `enabled: true` 로 바꿉니다.
+   게시자 ID(`data-ad-client`)는 이미 채워져 있습니다.
+   (`ads.js` 가 문자열 안의 `<script>` 를 실행해 push 를 호출합니다. 문자열 안에서는 `</script>` 를 `<\/script>` 로 씁니다.)
+
+> **자동 광고(Auto ads)** 만 쓸 거면 2~3 단계 없이, 애드센스 대시보드에서 자동 광고를 켜기만 하면 됩니다.
+> 로더가 이미 있으니 구글이 알아서 자리에 광고를 넣습니다. 사이드바 지정 배치를 원하면 위 수동 단위를 쓰세요.
 
 ### 카카오 애드핏
 `ads.js` 에서 애드핏이 준 코드를 그대로 넣습니다.

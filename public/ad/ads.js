@@ -11,10 +11,16 @@
   'use strict';
 
   // ── 광고 설정: 광고망 코드가 생기면 여기만 고치면 모든 슬롯에 반영된다 ──
+  // 애드센스 게시자 ID (로더는 각 페이지 <head> 에 이미 들어가 있음)
+  var ADSENSE_CLIENT = 'ca-pub-7678879723413419';
+
   var AD_UNITS = {
     sidebar: {
-      enabled: false,     // 실제 광고를 켤 때 true 로 바꾼다
-      html: ''            // 애드센스/애드핏에서 받은 <ins>.../<script>... 코드를 그대로 문자열로 (README 참고)
+      // 켜는 법: 애드센스 대시보드에서 "사이드바" 디스플레이 광고 단위를 만들어 data-ad-slot 번호를 받은 뒤,
+      //          아래 data-ad-slot 의 "0000000000" 을 그 번호로 바꾸고 enabled 를 true 로.
+      enabled: false,
+      html: '<ins class="adsbygoogle" style="display:block" data-ad-client="' + ADSENSE_CLIENT + '" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+            '<script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>'
     }
     // 새 자리(예: 'in-article')가 필요하면 같은 형식으로 추가하고, 페이지에 data-ad="in-article" 슬롯을 둔다
   };
