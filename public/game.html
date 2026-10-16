@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
   <link rel="icon" href="/logo.png?v=3" type="image/png">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/ad/ads.css">
 </head>
 <body data-page="game">
   <div class="topbar">
@@ -58,6 +59,12 @@
           <h3 class="widget-title">원본 출처</h3>
           <p id="source-box" class="widget-note"></p>
         </div>
+
+        <!-- 광고 자리 (public/ad/). 실제 광고 코드는 public/ad/ads.js 의 AD_UNITS 에 넣는다 -->
+        <div class="widget ad-widget">
+          <span class="ad-label">광고</span>
+          <div class="ad-slot" data-ad="sidebar"></div>
+        </div>
       </aside>
     </div>
   </main>
@@ -72,6 +79,7 @@
 
   <link rel="stylesheet" href="/chatbot/widget.css">
   <script src="/app.js"></script>
+  <script src="/ad/ads.js" defer></script>
   <script src="/chatbot/widget.js" defer></script>
 </body>
 </html>

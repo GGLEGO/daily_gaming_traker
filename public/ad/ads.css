@@ -1,0 +1,44 @@
+/* 광고 슬롯 공통 스타일.
+   - 실제 광고 코드가 들어오기 전엔 .ad-placeholder 가 "광고 자리"를 보여준다.
+   - 광고망(애드센스/애드핏)이 들어오면 .ad-slot 안에 그 코드가 그려진다. */
+
+.ad-slot {
+  margin: 0 0 20px;
+}
+
+/* 사이드바 광고는 위젯과 같은 폭에 맞춘다 */
+.sidebar .ad-slot { width: 100%; }
+
+.ad-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* 자리표시 (실제 광고 전) */
+.ad-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 250px;            /* 사이드바 표준 광고 크기(300x250) 기준 */
+  border: 1px dashed var(--g-300);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.ad-placeholder strong { font-weight: 900; color: var(--g-700); font-size: 0.95rem; }
+.ad-placeholder span { font-size: 0.75rem; }
+
+/* 실제 광고가 들어오면 가운데 정렬만 맞춰 둔다 */
+.ad-slot ins,
+.ad-slot iframe { display: block; margin: 0 auto; max-width: 100%; }
+
+/* 사이드바 광고 위젯 (widget 과 같은 틀) */
+.ad-widget { display: block; }
