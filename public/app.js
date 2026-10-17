@@ -129,7 +129,6 @@
           <span class="deal-meta">${typeTag(d)}${d.reviewText ? `<span class="deal-review-${esc(d.review || 'mixed')}">${esc(d.reviewText)}</span>` : ''}${d.released ? `<span>출시 ${esc(d.released)}</span>` : ''}</span>
           <span class="deal-ends">${dealEnds(d)}</span>
           <span class="deal-players">${typeof d.players === 'number' ? `👥 ${d.playersOf === 'parent' ? '본편 ' : ''}지금 접속 중 <strong>${d.players.toLocaleString('ko-KR')}</strong>명` : '👥 접속자 수 집계 불가'}</span>
-          <span class="deal-cta">Steam 상점에서 보기 ↗</span>
         </div>
       </a>`;
 

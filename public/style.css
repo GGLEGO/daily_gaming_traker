@@ -296,14 +296,14 @@ img { max-width: 100%; height: auto; }
 .deals-arrow:hover { background: #2e1c12; }
 .deals-viewport { overflow: hidden; border-radius: 10px; }
 .deals-track { display: flex; transition: transform .55s cubic-bezier(.22,.61,.36,1); will-change: transform; }
-.deal { flex: 0 0 100%; display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: center; padding: 2px 4px; color: #fff; }
+.deal { flex: 0 0 100%; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: center; padding: 2px 4px; color: #fff; }
 .deal:hover { color: #fff; }
 .deal-media { position: relative; aspect-ratio: 460 / 215; border-radius: 8px; overflow: hidden; background: #241611; }
 .deal-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .deal-pct { position: absolute; left: 10px; top: 10px; background: var(--lime); color: #061209; font-weight: 900; font-size: 1rem; padding: 4px 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
 .deal-body { display: grid; gap: 4px; min-width: 0; }
 .deal-rank { font-size: 0.75rem; color: var(--g-300); letter-spacing: .1em; }
-.deal-name { font-size: 1.35rem; font-weight: 900; line-height: 1.3; color: #fff; }
+.deal-name { font-size: 1.2rem; font-weight: 900; line-height: 1.25; color: #fff; }
 .deal-prices { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .deal-original { color: var(--g-300); text-decoration: line-through; font-size: 0.95rem; }
 .deal-final { color: var(--lime); font-weight: 900; font-size: 1.4rem; }
@@ -315,7 +315,6 @@ img { max-width: 100%; height: auto; }
 .deal-review-positive { color: #a9b86a; }
 .deal-review-mixed { color: #e5c76b; }
 .deal-review-negative { color: #e58b7a; }
-.deal-cta { justify-self: start; margin-top: 4px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; background: var(--lime); color: #061209; font-weight: 900; font-size: 0.88rem; }
 .deals-dots { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
 .deals-dot { width: 8px; height: 8px; border-radius: 50%; background: #4a3020; border: none; padding: 0; cursor: pointer; transition: width .2s, background .2s; }
 .deals-dot.active { width: 24px; border-radius: 4px; background: var(--lime); }
