@@ -123,12 +123,12 @@
       <a class="deal${isFree(d) ? ' deal-free' : ''}" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">
         <div class="deal-media"><img src="${esc(d.image)}" alt="" loading="${i === 0 ? 'eager' : 'lazy'}"${d.capsule ? ` onerror="this.onerror=null;this.src='${esc(d.capsule)}'"` : ''}><span class="deal-pct">${isFree(d) ? '무료' : `-${d.discount}%`}</span></div>
         <div class="deal-body">
-          <span class="deal-rank">${g.free ? `무료 배포 ${i + 1} · STEAM 한정 기간 100% 할인` : `${esc(g.label)} 인기 할인 ${i + 1}위 · 접속자 × 할인율`}</span>
+          <span class="deal-rank">${g.free ? `무료 배포 ${i + 1} · STEAM 한정 기간 100% 할인` : `${esc(g.label)} 인기 할인 ${i + 1}위`}</span>
           <span class="deal-name">${esc(d.name)}</span>
           <span class="deal-prices"><span class="deal-original">${esc(d.originalPrice)}</span><span class="deal-final">${isFree(d) ? '무료' : esc(d.finalPrice)}</span>${isFree(d) ? '<span class="deal-keep">지금 받으면 영구 소장</span>' : ''}</span>
           <span class="deal-meta">${typeTag(d)}${d.reviewText ? `<span class="deal-review-${esc(d.review || 'mixed')}">${esc(d.reviewText)}</span>` : ''}${d.released ? `<span>출시 ${esc(d.released)}</span>` : ''}</span>
           <span class="deal-ends">${dealEnds(d)}</span>
-          <span class="deal-players">${typeof d.players === 'number' ? `👥 ${d.playersOf === 'parent' ? '본편 ' : ''}지금 접속 중 <strong>${d.players.toLocaleString('ko-KR')}</strong>명` : '👥 접속자 수 집계 불가'}${typeof d.score === 'number' && !g.free ? ` · 인기 할인 점수 ${d.score}` : ''}</span>
+          <span class="deal-players">${typeof d.players === 'number' ? `👥 ${d.playersOf === 'parent' ? '본편 ' : ''}지금 접속 중 <strong>${d.players.toLocaleString('ko-KR')}</strong>명` : '👥 접속자 수 집계 불가'}</span>
           <span class="deal-cta">Steam 상점에서 보기 ↗</span>
         </div>
       </a>`;
