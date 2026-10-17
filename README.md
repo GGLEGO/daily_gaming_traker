@@ -1,7 +1,7 @@
 # Daily Gaming Tracker
 
 게임 패치 노트를 모아 보여주는 뉴스 사이트입니다. 밤색(브라운) 계열 뉴스 홈페이지 스타일이며, 현재
-**League of Legends**, **Overwatch**, **VALORANT**, **TFT(전략적 팀 전투)**, **로스트아크**, **메이플스토리**, **이터널 리턴**, **FC 온라인**, **배틀그라운드**, **아이온2** 열 게임을 다룹니다. 게임별 수집 에이전트가 24시간 주기로
+**League of Legends**, **Overwatch**, **VALORANT**, **TFT(전략적 팀 전투)**, **로스트아크**, **메이플스토리**, **이터널 리턴**, **FC 온라인**, **배틀그라운드**, **마인크래프트** 열 게임을 다룹니다. 게임별 수집 에이전트가 24시간 주기로
 공식 패치 노트 페이지를 확인하고, 새 패치가 있으면 내용을 그대로 가져와 사이트에 반영합니다.
 
 구조는 두 층으로 나뉩니다.
@@ -23,7 +23,7 @@ npm start          # http://localhost:3000
 
 ```bash
 npm run agents             # 모든 에이전트를 지금 바로 1회 실행 (node run.js)
-node run.js lol            # 한 게임만 (lol | overwatch | valorant | tft | lostark | maplestory | eternalreturn | fconline | pubg | aion2)
+node run.js lol            # 한 게임만 (lol | overwatch | valorant | tft | lostark | maplestory | eternalreturn | fconline | pubg | minecraft)
 ```
 
 환경변수
@@ -75,7 +75,7 @@ game/
   nexon/               Nexon        - updateBoard·noticeBoard 파서, data/maplestory.js, fconline.js
   nimbleneuron/        Nimble Neuron - 패치노트 API + 게시글 본문 파서, data/eternalreturn.js
   krafton/             Krafton      - Nuxt 상태 데이터 파서, data/pubg.js
-  ncsoft/              NCSoft       - plaync 커뮤니티 API 파서, data/aion2.js
+  mojang/              Mojang Studios - 공식 런처 패치노트 JSON 파서, data/minecraft.js
 store/<game>.json      [STORAGE=json] 수집된 패치 노트 (본문 HTML, contentHash, 수정 시 updatedAt·revisions 포함)
 store/changes.json     [STORAGE=json] 변경 이벤트 (new / backfill / updated / error, 최근 300건)
 logs/agents.log        수집 로그

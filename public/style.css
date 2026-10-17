@@ -183,7 +183,7 @@ img { max-width: 100%; height: auto; }
 .badge-eternalreturn { background: #7a5236; }
 .badge-fconline { background: #6e4426; }
 .badge-pubg { background: #9c6a2e; }
-.badge-aion2 { background: #7e5230; }
+.badge-minecraft { background: #5c8f3a; }
 .meta { font-size: 0.8rem; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
 /* ---- 뉴스 목록 ---- */

@@ -201,7 +201,7 @@ INSERT INTO companies (id, name, sort_order) VALUES
   ('nexon',        'Nexon',                  4),
   ('nimbleneuron', 'Nimble Neuron',          5),
   ('krafton',      'Krafton',                6),
-  ('ncsoft',       'NCSoft',                 7)
+  ('mojang',       'Mojang Studios',         7)
 ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order);
 
 INSERT INTO games (id, company_id, name, label, short, tagline, genre, source_url, image_in_body, sort_order) VALUES
@@ -214,7 +214,7 @@ INSERT INTO games (id, company_id, name, label, short, tagline, genre, source_ur
   ('fconline',      'nexon',        'FC 온라인',            'FC 온라인',         'FC',   'FC 온라인 정기점검·업데이트 안내',  'sports', 'https://fconline.nexon.com/news/notice/list',                             1, 2),
   ('eternalreturn', 'nimbleneuron', '이터널 리턴',          '이터널 리턴',       'ER',   '이터널 리턴 패치노트',            'aos',    'https://playeternalreturn.com/posts/news?categoryPath=patchnote',         0, 1),
   ('pubg',          'krafton',      'PUBG: 배틀그라운드',   '배틀그라운드',      'PUBG', 'PUBG: 배틀그라운드 패치 노트',     'fps',    'https://pubg.com/ko/news?category=patch_notes',                           0, 1),
-  ('aion2',         'ncsoft',       '아이온2',              '아이온2',           'A2',   '아이온2 업데이트 노트',           'rpg',    'https://aion2.plaync.com/ko-kr/board/update/list',                        1, 1)
+  ('minecraft',     'mojang',       'Minecraft',           '마인크래프트',      'MC',   '마인크래프트 자바 에디션 패치 노트', 'etc',    'https://www.minecraft.net/en-us/updates',                                 0, 1)
 ON DUPLICATE KEY UPDATE
   company_id = VALUES(company_id), name = VALUES(name), label = VALUES(label), short = VALUES(short),
   tagline = VALUES(tagline), genre = VALUES(genre), source_url = VALUES(source_url),

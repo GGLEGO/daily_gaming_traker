@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // 회사 표시 순서 (네비게이션에서 같은 장르 안의 게임 순서를 결정). 여기 없는 회사 폴더는 뒤에 이름순으로 붙는다.
-const COMPANY_ORDER = ['blizzard', 'riot', 'smilegate', 'nexon', 'nimbleneuron', 'krafton', 'ncsoft'];
+const COMPANY_ORDER = ['blizzard', 'riot', 'smilegate', 'nexon', 'nimbleneuron', 'krafton', 'mojang'];
 
 function companyDirs() {
   const dirs = fs.readdirSync(__dirname, { withFileTypes: true })
@@ -33,6 +33,7 @@ const GENRES = [
   { id: 'rpg', label: 'RPG', desc: 'MMORPG · 액션 RPG' },
   { id: 'aos', label: 'AOS', desc: 'MOBA · 전략' },
   { id: 'sports', label: '스포츠', desc: '스포츠' },
+  { id: 'etc', label: '샌드박스', desc: '샌드박스 · 어드벤처' },
 ];
 
 module.exports = { AGENTS, COMPANIES, GAME_IDS: Object.keys(AGENTS), GENRES };
