@@ -1,27 +1,27 @@
-/* ===== Today Game News - 초록색 뉴스 사이트 테마 (로고 색감 기준) ===== */
+/* ===== Today Game News - 밤색(브라운) 뉴스 사이트 테마 ===== */
 :root {
-  --g-50: #f3faee;
-  --g-100: #e6f5db;
-  --g-200: #cdeab8;
-  --g-300: #a9db8a;
-  --g-400: #86cc5f;
-  --g-500: #6cbf45;
-  --g-600: #4f9d2f;
-  --g-700: #3b7d25;
-  --g-800: #24521a;
-  --g-900: #060f07;
-  --lime: #8ef05a;
-  --ink: #15241a;
-  --ink-soft: #2f4a36;
-  --muted: #6b8070;
-  --line: #d9ecce;
+  --g-50: #faf6f0;
+  --g-100: #f3e9dd;
+  --g-200: #e6d2bb;
+  --g-300: #d2ad82;
+  --g-400: #bd8a55;
+  --g-500: #a66a39;
+  --g-600: #8a5329;
+  --g-700: #6e3f20;
+  --g-800: #4a2814;
+  --g-900: #160d07;
+  --lime: #e0a24e;
+  --ink: #2a1a10;
+  --ink-soft: #4a3326;
+  --muted: #8a7362;
+  --line: #ebdccb;
   --paper: #ffffff;
   --accent: #f3d85a;
   --ok: #3aa36b;
   --bad: #d9534f;
   --radius: 12px;
-  --shadow: 0 2px 10px rgba(36, 82, 26, 0.08);
-  --shadow-lg: 0 10px 30px rgba(36, 82, 26, 0.16);
+  --shadow: 0 2px 10px rgba(74, 40, 20, 0.08);
+  --shadow-lg: 0 10px 30px rgba(74, 40, 20, 0.16);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,11 +39,11 @@ img { max-width: 100%; height: auto; }
 .container { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
 
 /* ---- 상단 바 ---- */
-.topbar { background: #020704; color: var(--g-200); font-size: 0.8rem; border-bottom: 1px solid #10301a; }
+.topbar { background: #160d07; color: var(--g-200); font-size: 0.8rem; border-bottom: 1px solid #2e1c10; }
 .topbar-inner { display: flex; justify-content: space-between; align-items: center; height: 34px; }
 .topbar-right { display: inline-flex; align-items: center; gap: 6px; }
-.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 0 rgba(142, 240, 90, 0.7); animation: pulse 2s infinite; }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(142,240,90,.6);} 70% { box-shadow: 0 0 0 7px rgba(142,240,90,0);} 100% { box-shadow: 0 0 0 0 rgba(142,240,90,0);} }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 0 rgba(224, 162, 78, 0.7); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(224,162,78,.6);} 70% { box-shadow: 0 0 0 7px rgba(224,162,78,0);} 100% { box-shadow: 0 0 0 0 rgba(224,162,78,0);} }
 
 /* ---- 마스트헤드 (로고 왼쪽 상단) ---- */
 .masthead {
@@ -85,12 +85,12 @@ img { max-width: 100%; height: auto; }
 .search-form { display: flex; align-items: stretch; flex: 1 1 320px; max-width: 460px; min-width: 0; }
 .search-input {
   flex: 1; min-width: 0; padding: 11px 16px; font: inherit; font-size: 0.95rem;
-  color: #fff; background: #0f2414; border: 1.5px solid #1f4a2a; border-right: none; border-radius: 10px 0 0 10px; outline: none;
+  color: #fff; background: #241611; border: 1.5px solid #3a2416; border-right: none; border-radius: 10px 0 0 10px; outline: none;
 }
-.search-input::placeholder { color: #6f9a78; }
-.search-input:focus { border-color: var(--lime); box-shadow: 0 0 0 3px rgba(142, 240, 90, 0.18); }
+.search-input::placeholder { color: #a08a78; }
+.search-input:focus { border-color: var(--lime); box-shadow: 0 0 0 3px rgba(224, 162, 78, 0.18); }
 .search-btn { padding: 0 20px; font: inherit; font-weight: 900; color: #061209; background: var(--lime); border: 1.5px solid var(--lime); border-radius: 0 10px 10px 0; cursor: pointer; }
-.search-btn:hover { background: #a5f77a; }
+.search-btn:hover { background: #e8b96a; }
 .search-hit { background: #f6f3a8; padding: 0 2px; border-radius: 3px; color: var(--ink); }
 
 /* ---- 네비게이션 ---- */
@@ -174,16 +174,16 @@ img { max-width: 100%; height: auto; }
 .btn-ghost:hover { background: var(--g-100); color: var(--g-800); }
 
 .badge { display: inline-block; font-size: 0.7rem; font-weight: 900; letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; color: #fff; background: var(--g-600); }
-.badge-lol { background: #3b7d25; }
-.badge-overwatch { background: #6cbf45; }
-.badge-valorant { background: #2f6b3a; }
-.badge-tft { background: #4a8a2a; }
-.badge-lostark { background: #5a8f2e; }
-.badge-maplestory { background: #7fae3c; }
-.badge-eternalreturn { background: #3f7f5a; }
-.badge-fconline { background: #2e7d4f; }
-.badge-pubg { background: #5c8f2a; }
-.badge-aion2 { background: #3e8a4a; }
+.badge-lol { background: #6e3f20; }
+.badge-overwatch { background: #a66a39; }
+.badge-valorant { background: #6e4a2a; }
+.badge-tft { background: #9a6230; }
+.badge-lostark { background: #a06a34; }
+.badge-maplestory { background: #b9894a; }
+.badge-eternalreturn { background: #7a5236; }
+.badge-fconline { background: #6e4426; }
+.badge-pubg { background: #9c6a2e; }
+.badge-aion2 { background: #7e5230; }
 .meta { font-size: 0.8rem; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
 /* ---- 뉴스 목록 ---- */
@@ -279,26 +279,26 @@ img { max-width: 100%; height: auto; }
 .patch-body .PatchNotes-labels { display: none; }
 
 /* ---- Steam 할인 배너 (슬라이드) ---- */
-.deals { margin: 0 0 32px; background: var(--g-900); border: 1px solid #1f4a2a; border-radius: var(--radius); padding: 14px 16px 12px; box-shadow: var(--shadow-lg); color: #fff; }
+.deals { margin: 0 0 32px; background: var(--g-900); border: 1px solid #3a2416; border-radius: var(--radius); padding: 14px 16px 12px; box-shadow: var(--shadow-lg); color: #fff; }
 .deals-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .deals-kicker { font-size: 0.72rem; letter-spacing: 0.3em; font-weight: 900; color: var(--lime); }
 .deals-updated { font-size: 0.75rem; color: var(--g-300); }
 .deals-kicker-sub { margin-left: 8px; font-size: 0.68rem; letter-spacing: .08em; color: var(--g-300); font-weight: 700; }
 .deals-genres { display: flex; gap: 6px; flex-wrap: wrap; }
-.deals-genre { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid #2a5a36; background: #0f2414; color: var(--g-200); font: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: background .2s, color .2s; }
-.deals-genre:hover { background: #163520; }
+.deals-genre { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid #4a3020; background: #241611; color: var(--g-200); font: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: background .2s, color .2s; }
+.deals-genre:hover { background: #2e1c12; }
 .deals-genre.active { background: var(--lime); border-color: var(--lime); color: var(--g-900); }
 .deals-genre-count { font-size: 0.68rem; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,.12); }
 .deals-genre.active .deals-genre-count { background: rgba(0,0,0,.15); }
 @media (max-width: 760px) { .deals-head { flex-wrap: wrap; gap: 8px; } .deals-genres { order: 3; width: 100%; } }
 .deals-stage { display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; align-items: center; gap: 8px; }
-.deals-arrow { height: 44px; border: 1px solid #2a5a36; background: #0f2414; color: var(--lime); font-size: 1.6rem; line-height: 1; border-radius: 10px; cursor: pointer; }
-.deals-arrow:hover { background: #163520; }
+.deals-arrow { height: 44px; border: 1px solid #4a3020; background: #241611; color: var(--lime); font-size: 1.6rem; line-height: 1; border-radius: 10px; cursor: pointer; }
+.deals-arrow:hover { background: #2e1c12; }
 .deals-viewport { overflow: hidden; border-radius: 10px; }
 .deals-track { display: flex; transition: transform .55s cubic-bezier(.22,.61,.36,1); will-change: transform; }
 .deal { flex: 0 0 100%; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: center; padding: 6px 4px; color: #fff; }
 .deal:hover { color: #fff; }
-.deal-media { position: relative; aspect-ratio: 460 / 215; border-radius: 8px; overflow: hidden; background: #0f2414; }
+.deal-media { position: relative; aspect-ratio: 460 / 215; border-radius: 8px; overflow: hidden; background: #241611; }
 .deal-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .deal-pct { position: absolute; left: 10px; top: 10px; background: var(--lime); color: #061209; font-weight: 900; font-size: 1rem; padding: 4px 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
 .deal-body { display: grid; gap: 6px; min-width: 0; }
@@ -312,12 +312,12 @@ img { max-width: 100%; height: auto; }
 .deal-players { font-size: 0.82rem; color: var(--g-200); }
 .deal-players strong { color: var(--lime); font-weight: 900; }
 .deal-ends strong { color: var(--accent); font-weight: 900; }
-.deal-review-positive { color: #9be37a; }
+.deal-review-positive { color: #a9b86a; }
 .deal-review-mixed { color: #e5c76b; }
 .deal-review-negative { color: #e58b7a; }
 .deal-cta { justify-self: start; margin-top: 4px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; background: var(--lime); color: #061209; font-weight: 900; font-size: 0.88rem; }
 .deals-dots { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
-.deals-dot { width: 8px; height: 8px; border-radius: 50%; background: #2a5a36; border: none; padding: 0; cursor: pointer; transition: width .2s, background .2s; }
+.deals-dot { width: 8px; height: 8px; border-radius: 50%; background: #4a3020; border: none; padding: 0; cursor: pointer; transition: width .2s, background .2s; }
 .deals-dot.active { width: 24px; border-radius: 4px; background: var(--lime); }
 @media (max-width: 760px) {
   .deal { grid-template-columns: 1fr; gap: 12px; }
