@@ -16,7 +16,7 @@ const GAME_CATEGORIES = {
   eternalreturn: { label: '이터널 리턴', soop: '00040120', chzzk: 'Black_Survival_Eternal_Return' },
   fconline: { label: 'FC 온라인', soop: '00040070', chzzk: 'FIFA_ONLINE4' },
   pubg: { label: '배틀그라운드', soop: '00040066', chzzk: 'Player_Unknowns_Battle_Grounds' },
-  aion2: { label: '아이온2', soop: '00360126', chzzk: 'AION2' },
+  minecraft: { label: '마인크래프트', soop: '00040017', chzzk: 'Minecraft' },
 };
 
 const cache = new Map();
