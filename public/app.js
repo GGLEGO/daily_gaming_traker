@@ -29,7 +29,7 @@
         </div>
         <div class="genre-panels">
           ${blocks.map((ge) => `<div class="genre-panel${ge.id === currentGenre ? ' open' : ''}" data-genre="${esc(ge.id)}"><div class="genre-panel-inner"><div class="genre-games">
-            ${ge.games.map((g) => `<a class="game-btn game-btn-${g.id}${g.id === current ? ' active' : ''}" data-game="${g.id}" href="/${g.id}"><span class="game-btn-mark">${esc(g.short)}</span> ${esc(g.label)}</a>`).join('')}
+            ${ge.games.map((g) => `<a class="game-btn game-btn-${g.id}${g.id === current ? ' active' : ''}" data-game="${g.id}" href="/${g.id}">${gmark(g.id, g.short)} ${esc(g.label)}</a>`).join('')}
           </div></div></div>`).join('')}
         </div>`;
       box.querySelector('.genre-tabs').addEventListener('click', (ev) => {
@@ -45,6 +45,11 @@
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // 게임 아이콘(public/game/<id>.png). 이미지가 없거나 깨지면 기존 철자 배지로 자동 대체한다.
+  function gmark(id, short) {
+    return `<span class="gmark"><img class="gmark-img" src="/game/${encodeURIComponent(id)}.png" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="game-btn-mark gmark-fallback" style="display:none">${esc(short)}</span></span>`;
+  }
 
   async function getJSON(url) {
     const res = await fetch(url, { headers: { Accept: 'application/json' } });
@@ -269,7 +274,7 @@
     if (!games.length) return;
     const tabs = $('#streams-tabs');
     const panel = $('#streams-panel');
-    tabs.innerHTML = games.map((g, i) => `<button class="streams-tab${i === 0 ? ' active' : ''}" type="button" data-game="${esc(g.id)}"><span class="game-btn-mark">${esc(g.short || GAME_MARK[g.id] || g.id)}</span>${esc(g.label)}</button>`).join('');
+    tabs.innerHTML = games.map((g, i) => `<button class="streams-tab${i === 0 ? ' active' : ''}" type="button" data-game="${esc(g.id)}">${gmark(g.id, g.short || GAME_MARK[g.id] || g.id)}${esc(g.label)}</button>`).join('');
     box.hidden = false;
     let current = games[0].id;
     const show = (id) => {
