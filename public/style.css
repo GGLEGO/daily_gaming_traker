@@ -1,9 +1,9 @@
-/* ===== Today Game News - 밤색(브라운) 뉴스 사이트 테마 ===== */
+/* ===== Today Game News - 연두 배경 + 밤색 배너 테마 ===== */
 :root {
-  --g-50: #faf6f0;
-  --g-100: #f3e9dd;
-  --g-200: #e6d2bb;
-  --g-300: #d2ad82;
+  --g-50: #f3faee;
+  --g-100: #e6f5db;
+  --g-200: #cdeab8;
+  --g-300: #a9db8a;
   --g-400: #bd8a55;
   --g-500: #a66a39;
   --g-600: #8a5329;
@@ -13,8 +13,8 @@
   --lime: #e0a24e;
   --ink: #2a1a10;
   --ink-soft: #4a3326;
-  --muted: #8a7362;
-  --line: #ebdccb;
+  --muted: #7d8a6a;
+  --line: #d9ecce;
   --paper: #ffffff;
   --accent: #f3d85a;
   --ok: #3aa36b;
