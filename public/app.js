@@ -391,6 +391,27 @@
     }, 5 * 60 * 1000);
   }
 
+  // ---------- 최신 패치 노트 (홈 상단, 가장 눈에 띄는 섹션) ----------
+  async function renderLatestPatches() {
+    const box = $('#latest-patches');
+    if (!box) return;
+    let games;
+    try { games = await loadGames(); } catch (e) { return; }
+    const withPatch = games.filter((g) => g.latest)
+      .sort((a, b) => new Date(b.latest.publishedAt || 0) - new Date(a.latest.publishedAt || 0));
+    if (!withPatch.length) return;
+    $('#latest-patches-list').innerHTML = withPatch.map((g, i) => `
+      <a class="lp-card${i === 0 ? ' lp-lead' : ''}" href="/${g.id}/${encodeURIComponent(g.latest.id)}">
+        <div class="lp-thumb">${thumb(g.id, g.latest.image, true)}${g.latest.updatedAt ? '<span class="lp-flag">수정됨</span>' : ''}</div>
+        <div class="lp-body">
+          <span class="lp-game"><span class="lp-ico">${gmark(g.id, g.short)}</span>${esc(g.label)}</span>
+          <h3 class="lp-title">${esc(g.latest.title)}</h3>
+          <span class="lp-date">${g.latest.publishedAt ? esc(fmtDate(g.latest.publishedAt)) : ''}</span>
+        </div>
+      </a>`).join('');
+    box.hidden = false;
+  }
+
   // ---------- 게임 뉴스 (구글 뉴스) ----------
   async function renderNews() {
     const box = $('#news');
@@ -460,6 +481,7 @@
   renderNav();
   const page = document.body.dataset.page;
   if (page === 'home') {
+    renderLatestPatches();
     renderDeals();
     renderStreamsHome();
     renderNews();

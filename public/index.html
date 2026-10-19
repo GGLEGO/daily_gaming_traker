@@ -50,7 +50,7 @@
 
   <nav class="navbar">
     <div class="container nav-heading">
-      <h2 class="section-title">최신 패치 목록</h2>
+      <h2 class="section-title">게임 둘러보기</h2>
       <p class="section-desc">장르를 누르면 게임 목록이 열리고, 게임을 누르면 최신 패치 내역을 볼 수 있습니다.</p>
     </div>
     <div class="container nav-inner">
@@ -59,6 +59,14 @@
   </nav>
 
   <main class="container page">
+    <section id="latest-patches" class="section latest-patches" hidden>
+      <div class="section-head">
+        <h2 class="section-title">최신 패치 노트</h2>
+        <p class="section-desc">게임별 가장 최근 패치입니다. 카드를 누르면 전문을 볼 수 있습니다.</p>
+      </div>
+      <div id="latest-patches-list" class="lp-grid"></div>
+    </section>
+
     <section id="streams" class="section streams" hidden>
       <div class="section-head">
         <h2 class="section-title">실시간 스트리머 방송</h2>
