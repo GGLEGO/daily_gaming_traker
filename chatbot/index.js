@@ -22,12 +22,41 @@ function gameMeta(id) {
   const a = AGENTS[id];
   return { id, label: a.label, short: a.short, genre: a.genre, tagline: a.tagline };
 }
+// 게임 줄임말·별칭 (공백 제거·소문자 기준으로 매칭). 키는 모두 공백 없이 소문자로 적는다.
+const GAME_ALIASES = {
+  lol: ['롤', '리그오브레전드', '리그', 'leagueoflegends', 'league'],
+  tft: ['롤체', '전략적팀전투', '팀전투', 'teamfighttactics'],
+  eternalreturn: ['이리', '이터널리턴', 'eternalreturn', 'er'],
+  lostark: ['로아', '로스트아크', 'lostark'],
+  minecraft: ['마크', '마인크래프트', 'minecraft', 'mc'],
+  overwatch: ['옵치', '오버워치', 'overwatch', 'ow'],
+  valorant: ['발로', '발로란트', 'valorant', 'val'],
+  pubg: ['배그', '배틀그라운드', 'pubg', '플레이어언노운스배틀그라운드'],
+  maplestory: ['메이플', '메이플스토리', 'maplestory'],
+  fconline: ['피온', '피파온라인', 'fc온라인', 'fconline', 'fifaonline'],
+};
+// 별칭 → 게임 id 역색인 (공백 제거·소문자)
+const ALIAS_INDEX = {};
+for (const [id, names] of Object.entries(GAME_ALIASES)) {
+  for (const n of names) ALIAS_INDEX[n.toLowerCase().replace(/\s+/g, '')] = id;
+}
+
 function resolveGame(input) {
   if (!input) return null;
   const q = String(input).toLowerCase().trim();
-  const hit = GAME_IDS.find((id) => id === q || AGENTS[id].label.toLowerCase() === q || AGENTS[id].short.toLowerCase() === q)
-    || GAME_IDS.find((id) => AGENTS[id].label.toLowerCase().includes(q) || q.includes(AGENTS[id].label.toLowerCase()) || AGENTS[id].tagline.includes(q));
-  return hit || null;
+  const qc = q.replace(/\s+/g, ''); // 공백 제거형 ("리그 오브 레전드" → "리그오브레전드")
+  // 1) 정확 일치: id / 라벨 / 약칭 / 별칭
+  const exact = GAME_IDS.find((id) => id === q || AGENTS[id].label.toLowerCase() === q || AGENTS[id].short.toLowerCase() === q
+    || AGENTS[id].label.toLowerCase().replace(/\s+/g, '') === qc);
+  if (exact) return exact;
+  if (ALIAS_INDEX[qc] && AGENTS[ALIAS_INDEX[qc]]) return ALIAS_INDEX[qc];
+  // 2) 부분 포함: 라벨·태그라인이 입력과 겹치는 경우
+  const byLabel = GAME_IDS.find((id) => AGENTS[id].label.toLowerCase().includes(q) || q.includes(AGENTS[id].label.toLowerCase()) || AGENTS[id].tagline.includes(q));
+  if (byLabel) return byLabel;
+  // 3) 별칭이 입력 안에 포함 (예: "롤 패치" → lol). 2글자 이상 별칭만, 긴 별칭 우선
+  const aliasHit = Object.keys(ALIAS_INDEX).filter((n) => n.length >= 2 && qc.includes(n)).sort((a, b) => b.length - a.length)[0];
+  if (aliasHit && AGENTS[ALIAS_INDEX[aliasHit]]) return ALIAS_INDEX[aliasHit];
+  return null;
 }
 async function searchPatchNotes({ query, game, limit = 5 }) {
   const words = String(query || '').toLowerCase().split(/\s+/).filter(Boolean);
