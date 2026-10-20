@@ -48,14 +48,17 @@
 /* 홈 왼쪽 세로 광고 레일
    본문(최신 패치 노트 등)은 폭을 그대로 두고, 광고는 본문 왼쪽 바깥 여백에 고정 배치한다.
    여백이 충분한 넓은 화면에서만 보이고, 좁으면 숨겨 본문이 원래 크기를 유지한다. */
-.home-layout { display: block; }              /* 본문 전체 폭 유지 (레일이 폭을 깎지 않음) */
+.home-layout { display: block; position: relative; }  /* 본문 전체 폭 유지 + 레일의 기준 박스 */
 .home-main { min-width: 0; }
 .home-rail { display: none; }                 /* 기본(좁은 화면)엔 숨김 */
 .ad-slot-vertical .ad-placeholder { min-height: 540px; }  /* 세로로 긴 흰색 직사각형 (600→540, 10%↓) */
 @media (min-width: 1500px) {
+  /* 레일은 본문(main) 영역 높이만큼만 차지해, 위로는 밤색 상단을, 아래로는 푸터를 넘지 않는다 */
   .home-rail {
-    display: flex; flex-direction: column; gap: 6px;
-    position: fixed; top: 240px; width: 160px;  /* 밤색 상단 아래로 더 내린 시작점, 스크롤 시 고정되어 따라옴 */
-    left: calc((100vw - 1140px) / 2 - 176px);  /* 1140px 컨테이너 왼쪽 바깥 여백 */
+    display: block;
+    position: absolute; top: 0; bottom: 0;
+    left: -176px; width: 160px;               /* 1140px 컨테이너 왼쪽 바깥 여백 */
   }
+  /* 안쪽 광고는 sticky 로 스크롤을 따라오되, 레일(=본문) 끝에서 멈춰 푸터를 가리지 않는다 */
+  .home-rail-inner { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 6px; }
 }
