@@ -470,5 +470,6 @@ img { max-width: 100%; height: auto; }
 
 /* 맨 앞(가장 최근) 카드는 2칸을 차지해 더 크게 */
 .lp-lead { grid-column: span 2; }
-.lp-lead .lp-title { font-size: 1.3rem; }
-@media (max-width: 640px) { .lp-lead { grid-column: auto; } }
+.lp-lead .lp-thumb { aspect-ratio: auto; height: 170px; } /* 대표 카드 이미지 높이를 줄여 카드 크기 축소 */
+.lp-lead .lp-title { font-size: 1.12rem; }
+@media (max-width: 640px) { .lp-lead { grid-column: auto; } .lp-lead .lp-thumb { aspect-ratio: 16 / 9; height: auto; } }
