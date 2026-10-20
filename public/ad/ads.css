@@ -19,6 +19,7 @@
 }
 
 /* 자리표시 (실제 광고 전) */
+/* 광고 자리: 흰색 네모 블럭 (실제 광고 들어오기 전) */
 .ad-placeholder {
   display: flex;
   flex-direction: column;
@@ -26,9 +27,9 @@
   justify-content: center;
   gap: 4px;
   min-height: 250px;            /* 사이드바 표준 광고 크기(300x250) 기준 */
-  border: 1px dashed var(--g-300);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--paper);
+  background: #fff;
   color: var(--muted);
   font-size: 0.85rem;
   text-align: center;
@@ -40,5 +41,6 @@
 .ad-slot ins,
 .ad-slot iframe { display: block; margin: 0 auto; max-width: 100%; }
 
-/* 사이드바 광고 위젯 (widget 과 같은 틀) */
-.ad-widget { display: block; }
+/* 사이드바 광고 위젯: 스크롤 시 화면을 따라오도록 상단에 고정(sticky) */
+.ad-widget { display: block; position: sticky; top: 80px; }
+@media (max-width: 860px) { .ad-widget { position: static; } } /* 모바일 단일 컬럼에서는 고정 해제 */

@@ -202,7 +202,9 @@ img { max-width: 100%; height: auto; }
 .breadcrumb { font-size: 0.8rem; color: var(--muted); display: flex; gap: 6px; margin-bottom: 4px; }
 .game-title { font-family: "Noto Serif KR", serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; color: var(--g-800); }
 .game-tagline { color: var(--muted); font-size: 0.92rem; }
-.game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: start; }
+.game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: stretch; }
+/* 사이드바를 본문 높이만큼 늘려, 그 안의 sticky 광고가 스크롤을 따라오게 한다 */
+.sidebar { align-self: stretch; }
 .patch-list { list-style: none; display: grid; gap: 6px; max-height: 70vh; overflow: auto; }
 .patch-list li a { display: grid; gap: 2px; padding: 9px 10px; border-radius: 8px; background: var(--g-50); font-size: 0.88rem; font-weight: 500; color: var(--ink); border-left: 3px solid transparent; }
 .patch-list li a:hover { background: var(--g-100); }
