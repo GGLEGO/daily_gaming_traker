@@ -55,7 +55,7 @@
 @media (min-width: 1500px) {
   .home-rail {
     display: flex; flex-direction: column; gap: 6px;
-    position: fixed; top: 80px; width: 160px;
+    position: fixed; top: 184px; width: 160px;  /* 밤색 상단(상단바+마스트헤드 ~176px) 조금 아래에서 시작, 스크롤 시 고정되어 따라옴 */
     left: calc((100vw - 1140px) / 2 - 176px);  /* 1140px 컨테이너 왼쪽 바깥 여백 */
   }
 }
