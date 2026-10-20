@@ -166,6 +166,28 @@ app.get('/api/search', wrap(async (req, res) => {
   res.json({ q, total: r.total, items, byGame });
 }));
 
+// ---- 검색엔진용: robots.txt / sitemap.xml ----
+function siteBase(req) {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
+  const proto = req.get('x-forwarded-proto') || req.protocol || 'https';
+  return `${proto}://${req.get('host')}`;
+}
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send(`User-agent: *\nAllow: /\nSitemap: ${siteBase(req)}/sitemap.xml\n`);
+});
+app.get('/sitemap.xml', wrap(async (req, res) => {
+  const base = siteBase(req);
+  const iso = (v) => { const d = new Date(v); return isNaN(d) ? null : d.toISOString().slice(0, 10); };
+  const urls = [{ loc: `${base}/`, pr: '1.0' }];
+  for (const id of GAME_IDS) {
+    const s = await readStore(id, { html: false });
+    urls.push({ loc: `${base}/${id}`, pr: '0.8', lastmod: iso(s.lastSuccess) });
+    for (const it of s.items) urls.push({ loc: `${base}/${id}/${encodeURIComponent(it.id)}`, pr: '0.6', lastmod: iso(it.updatedAt || it.publishedAt || it.fetchedAt) });
+  }
+  const body = urls.map((u) => `  <url><loc>${u.loc}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<priority>${u.pr || '0.5'}</priority></url>`).join('\n');
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
+}));
+
 // ---- 페이지 라우트 (SPA 스타일) ----
 app.get('/search', (req, res) => res.sendFile(path.join(PUBLIC, 'search.html')));
 app.get('/', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html')));
