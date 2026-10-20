@@ -400,8 +400,10 @@
     const withPatch = games.filter((g) => g.latest)
       .sort((a, b) => new Date(b.latest.publishedAt || 0) - new Date(a.latest.publishedAt || 0));
     if (!withPatch.length) return;
+    // 대표(2칸) 카드는 가장 최근 게임이 맡되, FC 온라인은 항상 한 칸만 차지하도록 대표에서 제외
+    const leadIdx = withPatch.findIndex((g) => g.id !== 'fconline');
     $('#latest-patches-list').innerHTML = withPatch.map((g, i) => `
-      <a class="lp-card${i === 0 ? ' lp-lead' : ''}" href="/${g.id}/${encodeURIComponent(g.latest.id)}">
+      <a class="lp-card${i === leadIdx ? ' lp-lead' : ''}" href="/${g.id}/${encodeURIComponent(g.latest.id)}">
         <div class="lp-thumb">${thumb(g.id, g.latest.image, true)}${g.latest.updatedAt ? '<span class="lp-flag">수정됨</span>' : ''}</div>
         <div class="lp-body">
           <span class="lp-game"><span class="lp-ico">${gmark(g.id, g.short)}</span>${esc(g.label)}</span>
