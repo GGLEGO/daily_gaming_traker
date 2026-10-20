@@ -3,8 +3,6 @@
   'use strict';
   if (document.getElementById('dgt-chat-btn')) return;
 
-  const STORE_KEY = 'dgt-chat-history';
-
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // 아주 단순한 마크다운: **굵게**, [링크](url), 줄바꿈, "- " 목록
   function md(text) {
@@ -28,9 +26,9 @@
     return html;
   }
 
+  // 대화는 메모리에만 둔다. 새로고침하면 초기화된다 (저장소에 보관하지 않음).
   let history = [];
-  try { history = JSON.parse(sessionStorage.getItem(STORE_KEY) || '[]'); } catch (e) { history = []; }
-  const save = () => { try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-30))); } catch (e) { /* ignore */ } };
+  const save = () => {};
 
   // ---- DOM ----
   const btn = document.createElement('button');
