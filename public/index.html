@@ -35,6 +35,15 @@
     </div>
   </header>
 
+  <div class="home-wrap">
+    <!-- 왼쪽 세로 광고 자리 (public/ad/). 스팀 배너 옆·밤색 상단 아래에서 시작, 푸터 전에서 멈춤 -->
+    <aside class="home-rail">
+      <div class="home-rail-inner">
+        <span class="ad-label">광고</span>
+        <div class="ad-slot ad-slot-vertical" data-ad="home-left"></div>
+      </div>
+    </aside>
+
   <section id="deals" class="deals container deals-top" aria-label="Steam 인기 할인 게임" hidden>
     <div class="deals-head">
       <span class="deals-kicker">STEAM 인기 할인</span>
@@ -50,14 +59,6 @@
   </section>
 
   <main class="container page home-layout">
-    <!-- 왼쪽 세로 광고 자리 (public/ad/). 실제 광고는 ads.js 의 AD_UNITS.home-left 에 넣는다 -->
-    <aside class="home-rail">
-      <div class="home-rail-inner">
-        <span class="ad-label">광고</span>
-        <div class="ad-slot ad-slot-vertical" data-ad="home-left"></div>
-      </div>
-    </aside>
-
     <div class="home-main">
     <section id="latest-patches" class="section latest-patches" hidden>
       <div class="section-head">
@@ -86,6 +87,7 @@
     </section>
     </div>
   </main>
+  </div>
 
   <footer class="site-footer">
     <div class="container">
