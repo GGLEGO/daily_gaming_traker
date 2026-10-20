@@ -44,3 +44,13 @@
 /* 사이드바 광고 위젯: 스크롤 시 화면을 따라오도록 상단에 고정(sticky) */
 .ad-widget { display: block; position: sticky; top: 80px; }
 @media (max-width: 860px) { .ad-widget { position: static; } } /* 모바일 단일 컬럼에서는 고정 해제 */
+
+/* 홈 왼쪽 세로 광고 레일 */
+.home-layout { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 28px; align-items: start; }
+.home-rail { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 6px; }
+.home-main { min-width: 0; }
+.ad-slot-vertical .ad-placeholder { min-height: 600px; }  /* 세로로 긴 흰색 직사각형 */
+@media (max-width: 980px) {
+  .home-layout { grid-template-columns: 1fr; }
+  .home-rail { display: none; }   /* 좁은 화면에서는 왼쪽 레일 숨김 */
+}

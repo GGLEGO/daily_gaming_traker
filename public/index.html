@@ -12,6 +12,7 @@
   <!-- Google AdSense 로더 (ca-pub-7678879723413419) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7678879723413419" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/ad/ads.css">
 </head>
 <body data-page="home">
   <div class="topbar">
@@ -48,7 +49,14 @@
     <div id="deals-dots" class="deals-dots"></div>
   </section>
 
-  <main class="container page">
+  <main class="container page home-layout">
+    <!-- 왼쪽 세로 광고 자리 (public/ad/). 실제 광고는 ads.js 의 AD_UNITS.home-left 에 넣는다 -->
+    <aside class="home-rail">
+      <span class="ad-label">광고</span>
+      <div class="ad-slot ad-slot-vertical" data-ad="home-left"></div>
+    </aside>
+
+    <div class="home-main">
     <section id="latest-patches" class="section latest-patches" hidden>
       <div class="section-head">
         <h2 class="section-title">최신 패치 노트</h2>
@@ -74,6 +82,7 @@
       <div id="news-list" class="gnews-list"></div>
       <div id="news-foot" class="gnews-foot"></div>
     </section>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -86,6 +95,7 @@
 
   <link rel="stylesheet" href="/chatbot/widget.css">
   <script src="/app.js"></script>
+  <script src="/ad/ads.js" defer></script>
   <script src="/chatbot/widget.js" defer></script>
 </body>
 </html>
