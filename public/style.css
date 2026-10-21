@@ -378,7 +378,9 @@ img { max-width: 100%; height: auto; }
 .streams-empty { padding: 22px; text-align: center; color: var(--muted); font-size: 0.88rem; }
 .streams-foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--muted); }
 @media (max-width: 900px) {
-  .streams-panel { grid-template-columns: 1fr; }
+  /* 모바일: 모든 게임에서 SOOP·치지직(·일정)을 세로로 쌓는다. .no-es 규칙보다 우선하도록 함께 지정 */
+  .streams-panel,
+  .streams-panel.no-es { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .stream { grid-template-columns: 20px 96px minmax(0, 1fr); gap: 8px; padding: 8px 10px; }
