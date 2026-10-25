@@ -7,23 +7,28 @@ const { fetchText, log, storage } = require('../../base');
 const { currentPlayers } = require('..'); // steam/index.js 의 동시 접속자 조회 재사용
 
 const COOKIE = 'birthtime=0; lastagecheckage=1-0-1990; wants_mature_content=1; Steam_Language=koreana';
-const PER_GENRE = 100; // 장르별로 받을 최대 무료 게임 수 (합쳐서 중복 제거)
-const MAX_GAMES = 400;  // 저장할 최대 게임 수 (안전 상한)
+const PER_GENRE = 200; // 장르별로 받을 최대 무료 게임 수 (합쳐서 중복 제거)
+const MAX_GAMES = 500;  // 저장할 최대 게임 수 (안전 상한)
 
-// 사용자가 요청한 장르 구분 (Steam 사용자 태그 ID)
+// 장르 구분 (Steam 사용자 태그 ID)
 const FREE_GENRES = [
-  { id: 'coop', label: '협동', tags: [3843] },
-  { id: 'rpg', label: 'RPG', tags: [122] },
-  { id: 'puzzle', label: '퍼즐', tags: [1664] },
-  { id: 'racing', label: '레이싱', tags: [699] },
-  { id: 'aos', label: 'AOS', tags: [1718] },
-  { id: 'card', label: '카드', tags: [1666] },
-  { id: 'fps', label: 'FPS', tags: [1663] },
+  { id: 'action', label: '액션', tags: [19] },
+  { id: 'casual', label: '캐주얼', tags: [597] },
+  { id: 'strategy', label: '전략', tags: [9] },
+  { id: 'adventure', label: '어드벤처', tags: [21] },
+  { id: 'anime', label: '애니', tags: [4085] },
+  { id: 'simulation', label: '시뮬레이션', tags: [599] },
+  { id: 'mmorpg', label: 'MMORPG', tags: [1684] },
+  { id: 'openworld', label: '오픈월드', tags: [1695] },
+  { id: 'horror', label: '호러', tags: [1667] },
+  { id: 'indie', label: '인디', tags: [492] },
+  { id: 'sports', label: '스포츠', tags: [701] },
 ];
 const GENRE_ORDER = FREE_GENRES.map((g) => g.id);
 
-function searchUrl(tag) {
-  return `https://store.steampowered.com/search/results/?query&start=0&count=${PER_GENRE}&maxprice=free&tags=${tag}&filter=topsellers&infinite=1&cc=kr&l=koreana`;
+const PAGE = 100; // Steam 검색은 요청당 최대 100개 → 여러 페이지로 나눠 받는다
+function searchUrl(tag, start) {
+  return `https://store.steampowered.com/search/results/?query&start=${start}&count=${PAGE}&maxprice=free&tags=${tag}&filter=topsellers&infinite=1&cc=kr&l=koreana`;
 }
 
 function parseRows(json) {
@@ -110,25 +115,31 @@ async function collect() {
       const seen = new Set();
       let rank = 0;
       for (const tag of g.tags) {
-        const json = JSON.parse(await fetchText(searchUrl(tag), { headers: { Accept: 'application/json', Cookie: COOKIE } }));
-        for (const it of parseRows(json)) {
-          if (seen.has(it.appid)) continue;
-          seen.add(it.appid);
-          rank += 1;
-          const cur = byId.get(it.appid) || { ...it, genres: new Set(), bestRank: Infinity };
-          cur.genres.add(g.id);
-          cur.bestRank = Math.min(cur.bestRank, rank);
-          if (!cur.review && it.review) { cur.review = it.review; cur.reviewText = it.reviewText; }
-          byId.set(it.appid, cur);
+        for (let start = 0; start < PER_GENRE; start += PAGE) {
+          const json = JSON.parse(await fetchText(searchUrl(tag, start), { headers: { Accept: 'application/json', Cookie: COOKIE } }));
+          const rows = parseRows(json);
+          if (!rows.length) break; // 더 받을 게 없으면 다음 페이지 중단
+          for (const it of rows) {
+            if (seen.has(it.appid)) continue;
+            seen.add(it.appid);
+            rank += 1;
+            const cur = byId.get(it.appid) || { ...it, genres: new Set(), bestRank: Infinity };
+            cur.genres.add(g.id);
+            cur.bestRank = Math.min(cur.bestRank, rank);
+            if (!cur.review && it.review) { cur.review = it.review; cur.reviewText = it.reviewText; }
+            byId.set(it.appid, cur);
+          }
         }
       }
       log('steam', `무료-${g.label}: ${seen.size}개`);
     }
     let games = [...byId.values()].map((it) => ({ ...it, genres: GENRE_ORDER.filter((id) => it.genres.has(id)) }));
-    // 인기순: 동시 접속자 많은 순 → 장르 topseller 상위 순. 접속자 없는 게임은 뒤로.
+    // 1차: 장르 topseller 상위 순으로 줄여 접속자 조회 수를 MAX_GAMES 로 제한
+    games.sort((a, b) => a.bestRank - b.bestRank || a.name.localeCompare(b.name, 'ko'));
+    games = games.slice(0, MAX_GAMES);
+    // 2차: 동시 접속자 많은 순(인기순)으로 정렬. 접속자 없는 게임은 뒤로.
     await attachPlayers(games);
     games.sort((a, b) => (b.players || 0) - (a.players || 0) || a.bestRank - b.bestRank || a.name.localeCompare(b.name, 'ko'));
-    games = games.slice(0, MAX_GAMES);
 
     if (storage.backend === 'mysql') await saveToSql(games);
     else await storage.saveFree({ updatedAt: new Date().toISOString(), genres: FREE_GENRES.map((g) => ({ id: g.id, label: g.label })), games, total: games.length });
