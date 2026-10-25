@@ -106,11 +106,31 @@ async function loadFromSql() {
   return { updatedAt: u && u.updatedAt ? new Date(u.updatedAt).toISOString() : null, genres: FREE_GENRES.map((g) => ({ id: g.id, label: g.label })), games, total: games.length };
 }
 
-// 수집: 7개 장르에서 무료 게임을 모아 중복 제거, 각 게임의 장르 집합·인기순위를 매겨 저장
-async function collect() {
-  log('steam', '무료 게임(교차 필터) 수집 시작');
+// ── 하네스 2단계: 분류 ──
+// 우리 장르 ↔ Steam 공식 장르(appdetails genres, 영어). 공식 장르가 없는 것(anime/openworld/horror)은 태그로만 판정한다.
+const OFFICIAL = { action: 'Action', casual: 'Casual', strategy: 'Strategy', adventure: 'Adventure', simulation: 'Simulation', indie: 'Indie', sports: 'Sports', mmorpg: 'Massively Multiplayer' };
+const TAG_ONLY = new Set(['anime', 'openworld', 'horror']);
+
+async function fetchOfficialGenres(appid) {
   try {
-    const byId = new Map(); // appid -> { info, genres:Set, bestRank }
+    const r = JSON.parse(await fetchText(`https://store.steampowered.com/api/appdetails?appids=${appid}&cc=kr&l=english&filters=genres`, { timeout: 10000 }));
+    const data = r[appid] && r[appid].data;
+    return data && Array.isArray(data.genres) ? data.genres.map((x) => x.description) : [];
+  } catch (e) { return null; } // null = 조회 실패 → 태그 기준 유지
+}
+
+// 게임의 최종 장르: 공식 장르로 판정 가능한 장르는 공식 장르로 확정, 태그 전용 장르는 검색 태그(provisional)로 인정
+function classifyGenres(provisional, official) {
+  if (official === null) return GENRE_ORDER.filter((id) => provisional.has(id)); // 조회 실패 시 태그 기준
+  return GENRE_ORDER.filter((id) => (OFFICIAL[id] ? official.includes(OFFICIAL[id]) : (TAG_ONLY.has(id) && provisional.has(id))));
+}
+
+// 하네스: 검색(수집) → 분류(Steam 공식 장르로 교정) → SQL 등록
+async function collect() {
+  log('steam', '무료 게임 하네스 시작 (검색 → 분류 → 저장)');
+  try {
+    // 1) 검색: 장르 태그로 무료 게임 후보를 모으고 중복 제거 (임시 장르·순위 기록)
+    const byId = new Map();
     for (const g of FREE_GENRES) {
       const seen = new Set();
       let rank = 0;
@@ -118,35 +138,44 @@ async function collect() {
         for (let start = 0; start < PER_GENRE; start += PAGE) {
           const json = JSON.parse(await fetchText(searchUrl(tag, start), { headers: { Accept: 'application/json', Cookie: COOKIE } }));
           const rows = parseRows(json);
-          if (!rows.length) break; // 더 받을 게 없으면 다음 페이지 중단
+          if (!rows.length) break;
           for (const it of rows) {
             if (seen.has(it.appid)) continue;
             seen.add(it.appid);
             rank += 1;
-            const cur = byId.get(it.appid) || { ...it, genres: new Set(), bestRank: Infinity };
-            cur.genres.add(g.id);
+            const cur = byId.get(it.appid) || { ...it, provisional: new Set(), bestRank: Infinity };
+            cur.provisional.add(g.id);
             cur.bestRank = Math.min(cur.bestRank, rank);
             if (!cur.review && it.review) { cur.review = it.review; cur.reviewText = it.reviewText; }
             byId.set(it.appid, cur);
           }
         }
       }
-      log('steam', `무료-${g.label}: ${seen.size}개`);
     }
-    let games = [...byId.values()].map((it) => ({ ...it, genres: GENRE_ORDER.filter((id) => it.genres.has(id)) }));
-    // 1차: 장르 topseller 상위 순으로 줄여 접속자 조회 수를 MAX_GAMES 로 제한
-    games.sort((a, b) => a.bestRank - b.bestRank || a.name.localeCompare(b.name, 'ko'));
-    games = games.slice(0, MAX_GAMES);
-    // 2차: 동시 접속자 많은 순(인기순)으로 정렬. 접속자 없는 게임은 뒤로.
+    let games = [...byId.values()].sort((a, b) => a.bestRank - b.bestRank || a.name.localeCompare(b.name, 'ko')).slice(0, MAX_GAMES);
+    log('steam', `검색: 후보 ${games.length}개`);
+
+    // 2) 분류: Steam 공식 장르(appdetails)로 각 게임의 장르를 바로잡는다 (4개 동시, 실패 시 태그 기준 유지)
+    let confirmed = 0;
+    for (let i = 0; i < games.length; i += 4) {
+      await Promise.all(games.slice(i, i + 4).map(async (it) => {
+        const official = await fetchOfficialGenres(it.appid);
+        it.genres = classifyGenres(it.provisional, official);
+        if (official !== null) confirmed += 1;
+      }));
+    }
+    games = games.filter((it) => it.genres.length); // 우리 장르 어디에도 안 맞으면 제외
+    log('steam', `분류: 공식 장르 ${confirmed}개 확인, 최종 ${games.length}개`);
+
+    // 3) SQL 등록: 접속자 수를 붙여 인기순 정렬 후 저장
     await attachPlayers(games);
     games.sort((a, b) => (b.players || 0) - (a.players || 0) || a.bestRank - b.bestRank || a.name.localeCompare(b.name, 'ko'));
-
     if (storage.backend === 'mysql') await saveToSql(games);
     else await storage.saveFree({ updatedAt: new Date().toISOString(), genres: FREE_GENRES.map((g) => ({ id: g.id, label: g.label })), games, total: games.length });
-    log('steam', `무료 목록 완료: ${games.length}개 (장르 ${FREE_GENRES.length}종)`);
+    log('steam', `저장 완료: ${games.length}개 (장르 ${FREE_GENRES.length}종)`);
     return { ok: true, count: games.length };
   } catch (e) {
-    log('steam', `무료 목록 실패: ${e.message}`);
+    log('steam', `무료 하네스 실패: ${e.message}`);
     return { ok: false, error: e.message };
   }
 }
