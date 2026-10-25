@@ -111,7 +111,7 @@
     // 장르별(FPS / RPG / AOS / 스포츠) 할인율 상위 5개. 옛 형식(items 만 있음)도 한 탭으로 보여준다
     const normalize = (d) => (d.genres && d.genres.length ? d.genres : [{ id: 'all', label: '전체', items: d.items || [] }])
       .map((g) => ({ ...g, items: (g.items || []).slice(0, g.free ? 8 : 5) }))
-      .filter((g) => g.items.length);
+      .filter((g) => g.items.length && !g.free);  /* 무료 배포는 배너에서 빼고 /free 페이지로 */
     let data;
     try { data = await getJSON('/api/deals'); } catch (e) { return; }
     let genres = normalize(data);
@@ -161,7 +161,7 @@
       play();
     };
     if (tabs) {
-      tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
+      tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('') + '<a class="deals-free-link" href="/free">무료 배포 목록 ↗</a>';
       tabs.addEventListener('click', (ev) => { const t = ev.target.closest('.deals-genre'); if (t) showGenre(t.dataset.genre); });
     }
     box.querySelector('.deals-prev').addEventListener('click', () => { go(idx - 1); play(); });
@@ -181,7 +181,7 @@
       const ng = normalize(fresh);
       if (!ng.length) return;
       genres = ng;
-      if (tabs) tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('');
+      if (tabs) tabs.innerHTML = genres.map((g) => `<button class="deals-genre${g.free ? ' deals-genre-free' : ''}" type="button" data-genre="${esc(g.id)}">${esc(g.label)}<span class="deals-genre-count">${g.items.length}</span></button>`).join('') + '<a class="deals-free-link" href="/free">무료 배포 목록 ↗</a>';
       showGenre(genres.find((g) => g.id === current.id) ? current.id : genres[0].id, idx);
     }
     setInterval(refreshDeals, 5 * 60 * 1000);
@@ -413,6 +413,38 @@
     box.hidden = false;
   }
 
+  // ---------- Steam 무료 게임 목록 (/free 페이지) ----------
+  function freeCard(it, i) {
+    const img = it.capsule || it.image;
+    const players = typeof it.players === 'number' ? `👥 ${it.players.toLocaleString('ko-KR')}` : '';
+    return `<a class="free-card" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">
+        <span class="free-rank">${i + 1}</span>
+        <div class="free-thumb"><img src="${esc(img)}" alt="" loading="lazy"${it.capsule && it.image ? ` onerror="this.onerror=null;this.src='${esc(it.image)}'"` : ''}></div>
+        <div class="free-body">
+          <span class="free-name">${esc(it.name)}</span>
+          <span class="free-meta">${it.reviewText ? `<span class="deal-review-${esc(it.review || 'mixed')}">${esc(it.reviewText)}</span>` : ''}${players ? `<span>${players}</span>` : ''}${it.released ? `<span>${esc(it.released)}</span>` : ''}</span>
+          <span class="free-price">무료</span>
+        </div>
+      </a>`;
+  }
+  async function renderFreeGames() {
+    const box = $('#free-sections');
+    const tabs = $('#free-tabs');
+    if (!box) return;
+    let data;
+    try { data = await getJSON('/api/free-games'); } catch (e) { box.innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
+    const genres = (data.genres || []).filter((g) => g.items && g.items.length);
+    if (!genres.length) { box.innerHTML = '<div class="empty">아직 수집된 무료 게임이 없습니다. 잠시 후 다시 확인해 주세요.</div>'; return; }
+    if (tabs) tabs.innerHTML = genres.map((g) => `<a class="free-tab" href="#free-${esc(g.id)}">${esc(g.label)}<span>${g.items.length}</span></a>`).join('');
+    box.innerHTML = genres.map((g) => `
+      <section class="free-genre" id="free-${esc(g.id)}">
+        <div class="section-head"><h2 class="section-title">${esc(g.label)}</h2><p class="section-desc">인기순 ${g.items.length}개</p></div>
+        <div class="free-grid">${g.items.map((it, i) => freeCard(it, i)).join('')}</div>
+      </section>`).join('');
+    const foot = $('#free-foot');
+    if (foot) foot.innerHTML = `${data.updatedAt ? `갱신 ${relTime(data.updatedAt)} · ` : ''}출처 <a href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">Steam ↗</a>`;
+  }
+
   // ---------- 게임 뉴스 (구글 뉴스) ----------
   async function renderNews() {
     const box = $('#news');
@@ -489,4 +521,5 @@
   }
   if (page === 'game') renderGame();
   if (page === 'search') renderSearch();
+  if (page === 'free') renderFreeGames();
 })();

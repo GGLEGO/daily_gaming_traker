@@ -63,6 +63,11 @@ app.get('/api/deals', wrap(async (req, res) => {
   try { res.json(await steam.loadDealsWithPlayers()); } catch (e) { res.json(await steam.loadDeals()); }
 }));
 
+// Steam 무료 게임 목록 (장르별 인기순, /free 페이지용)
+app.get('/api/free-games', wrap(async (req, res) => {
+  res.json(await steam.loadFree());
+}));
+
 // 실시간 스트리머 방송 (SOOP + 치지직, 시청자순 5개씩)
 app.get('/api/streams', (req, res) => {
   res.json({ games: streams.STREAM_GAME_IDS.map((id) => ({ id, label: streams.GAME_CATEGORIES[id].label, short: streams.GAME_CATEGORIES[id].short || (AGENTS[id] && AGENTS[id].short) || id.toUpperCase() })) });
@@ -184,12 +189,14 @@ app.get('/sitemap.xml', wrap(async (req, res) => {
     urls.push({ loc: `${base}/${id}`, pr: '0.8', lastmod: iso(s.lastSuccess) });
     for (const it of s.items) urls.push({ loc: `${base}/${id}/${encodeURIComponent(it.id)}`, pr: '0.6', lastmod: iso(it.updatedAt || it.publishedAt || it.fetchedAt) });
   }
+  urls.push({ loc: `${base}/free`, pr: '0.7' });
   const body = urls.map((u) => `  <url><loc>${u.loc}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<priority>${u.pr || '0.5'}</priority></url>`).join('\n');
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
 }));
 
 // ---- 페이지 라우트 (SPA 스타일) ----
 app.get('/search', (req, res) => res.sendFile(path.join(PUBLIC, 'search.html')));
+app.get('/free', (req, res) => res.sendFile(path.join(PUBLIC, 'free.html')));
 app.get('/', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html')));
 app.get('/:game', (req, res, next) => {
   if (!AGENTS[req.params.game]) return next();

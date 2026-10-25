@@ -246,5 +246,14 @@ async function loadDeals() {
 async function saveDeals(obj) {
   await db().query('INSERT INTO app_state (name, value) VALUES (?, CAST(? AS JSON)) ON DUPLICATE KEY UPDATE value = VALUES(value)', ['steam_deals', JSON.stringify(obj)]);
 }
+async function loadFree() {
+  const [rows] = await db().query('SELECT value FROM app_state WHERE name = ?', ['steam_free']);
+  if (!rows.length) return { updatedAt: null, genres: [], items: [] };
+  const v = rows[0].value;
+  return typeof v === 'string' ? JSON.parse(v) : v;
+}
+async function saveFree(obj) {
+  await db().query('INSERT INTO app_state (name, value) VALUES (?, CAST(? AS JSON)) ON DUPLICATE KEY UPDATE value = VALUES(value)', ['steam_free', JSON.stringify(obj)]);
+}
 
-module.exports = { features, init, close, loadStore, countItems, getItem, commitRun, recordEvents, loadChanges, search, loadDeals, saveDeals, ensureGame, db };
+module.exports = { features, init, close, loadStore, countItems, getItem, commitRun, recordEvents, loadChanges, search, loadDeals, saveDeals, loadFree, saveFree, ensureGame, db };

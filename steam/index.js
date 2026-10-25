@@ -25,6 +25,75 @@ const FREE_URL = 'https://store.steampowered.com/search/results/?query&start=0&c
 const FREE_COUNT = 8;
 const TYPE_LABEL = { game: '게임', dlc: 'DLC', demo: '데모', music: '사운드트랙', video: '영상' };
 
+// ---- 무료 게임 목록 (할인과 별개: maxprice=free 로 무료 게임을 장르별 인기순으로) ----
+const FREE_GENRES = [
+  { id: 'coop', label: '협동', tags: [3843] },
+  { id: 'rpg', label: 'RPG', tags: [122] },
+  { id: 'puzzle', label: '퍼즐', tags: [1664] },
+  { id: 'racing', label: '레이싱', tags: [699] },
+  { id: 'aos', label: 'AOS', tags: [1718] },
+  { id: 'card', label: '카드', tags: [1666] },
+  { id: 'fps', label: 'FPS', tags: [1663] },
+];
+const FREE_LIST_COUNT = 10; // 장르당 보여줄 무료 게임 수
+
+function freeSearchUrl(tag) {
+  return `https://store.steampowered.com/search/results/?query&start=0&count=25&maxprice=free&tags=${tag}&filter=topsellers&infinite=1&cc=kr&l=koreana`;
+}
+
+// 무료 게임 행 파싱 (할인 조건 없이). 가격은 "무료".
+function parseFree(json) {
+  const $ = cheerio.load(json.results_html || '');
+  const out = [];
+  $('a.search_result_row').each((_, a) => {
+    const $a = $(a);
+    const appid = $a.attr('data-ds-appid');
+    if (!appid || /,/.test(appid)) return; // 번들 제외
+    const review = $a.find('.search_review_summary').first();
+    out.push({
+      appid,
+      name: $a.find('.title').first().text().trim(),
+      url: `https://store.steampowered.com/app/${appid}/`,
+      image: `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`,
+      capsule: $a.find('.search_capsule img').first().attr('src') || null,
+      review: review.hasClass('positive') ? 'positive' : review.hasClass('mixed') ? 'mixed' : review.hasClass('negative') ? 'negative' : null,
+      reviewText: (review.attr('data-tooltip-html') || '').split('<br>')[0] || '',
+      released: $a.find('.search_released').first().text().trim(),
+    });
+  });
+  return out;
+}
+
+// 장르별 무료 게임 인기순 상위 10개를 모아 저장한다 (동시 접속자 수 포함)
+async function runFree() {
+  log('steam', '무료 게임 목록 수집 시작');
+  try {
+    const genres = [];
+    for (const g of FREE_GENRES) {
+      const seen = new Map();
+      for (const tag of g.tags) {
+        const json = JSON.parse(await fetchText(freeSearchUrl(tag), { headers: { Accept: 'application/json', Cookie: COOKIE } }));
+        for (const it of parseFree(json)) if (!seen.has(it.appid)) seen.set(it.appid, it);
+      }
+      const items = [...seen.values()].slice(0, FREE_LIST_COUNT); // topsellers 순서(=인기순) 유지
+      await attachPlayers(items); // 표시용 동시 접속자
+      genres.push({ id: g.id, label: g.label, items });
+      log('steam', `무료-${g.label}: ${items.length}개`);
+    }
+    const next = { updatedAt: new Date().toISOString(), source: 'Steam 무료 게임 · 장르별 인기순', genres, items: genres.flatMap((g) => g.items) };
+    await storage.saveFree(next);
+    log('steam', `무료 목록 완료: ${genres.map((g) => `${g.label} ${g.items.length}`).join(', ')}`);
+    return { ok: true, count: next.items.length };
+  } catch (e) {
+    log('steam', `무료 목록 실패: ${e.message}`);
+    return { ok: false, error: e.message };
+  }
+}
+
+async function loadFree() {
+  try { return await storage.loadFree(); } catch (e) { return { updatedAt: null, genres: [], items: [] }; }
+}
+
 // 저장 계층(JSON 파일 또는 MySQL app_state)에서 마지막 수집 결과를 읽는다
 async function loadDeals() {
   try { return await storage.loadDeals(); } catch (e) { return { updatedAt: null, lastError: null, genres: [], items: [] }; }
@@ -197,5 +266,5 @@ async function loadDealsWithPlayers() {
   return { ...store, genres, items: genres.flatMap((g) => g.items), playersAt: new Date().toISOString() };
 }
 
-module.exports = { run, loadDeals, loadDealsWithPlayers, currentPlayers, scoreOf, GENRES, RANKING_DESC };
+module.exports = { run, runFree, loadDeals, loadDealsWithPlayers, loadFree, currentPlayers, scoreOf, GENRES, FREE_GENRES, RANKING_DESC };
 if (require.main === module) storage.init().then(run).then(async (r) => { await storage.close(); console.log(r); process.exit(r.ok ? 0 : 1); });

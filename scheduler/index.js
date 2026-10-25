@@ -17,6 +17,7 @@ async function runAll(reason = 'scheduled') {
   try {
     for (const g of GAME_IDS) state.lastResults[g] = await AGENTS[g].run({ reason });
     state.lastResults.steam = await steam.run();
+    state.lastResults.steamFree = await steam.runFree();
     state.lastRunAt = new Date().toISOString();
   } finally {
     state.running = false;
@@ -27,7 +28,7 @@ async function runAll(reason = 'scheduled') {
 function start({ runOnStart = true } = {}) {
   if (!cron.validate(CRON)) throw new Error(`잘못된 CRON 표현식: ${CRON}`);
   cron.schedule(CRON, () => runAll('cron'), { timezone: TZ });
-  cron.schedule(STEAM_CRON, () => steam.run(), { timezone: TZ });
+  cron.schedule(STEAM_CRON, () => { steam.run(); steam.runFree(); }, { timezone: TZ });
   log('scheduler', `스케줄 등록: "${CRON}" (${TZ}) - 24시간 주기, Steam 할인 "${STEAM_CRON}"`);
   if (runOnStart) setTimeout(() => runAll('startup').catch((e) => log('scheduler', e.message)), 1000);
 }

@@ -127,4 +127,8 @@ async function loadDeals() {
 }
 async function saveDeals(obj) { writeJson(DEALS_PATH, obj); }
 
-module.exports = { features, init, close, loadStore, countItems, getItem, commitRun, recordEvents, loadChanges, search, loadDeals, saveDeals, DIR };
+const FREE_PATH = path.join(DIR, 'steam_free.json');
+async function loadFree() { return readJson(FREE_PATH, { updatedAt: null, genres: [], items: [] }); }
+async function saveFree(obj) { writeJson(FREE_PATH, obj); }
+
+module.exports = { features, init, close, loadStore, countItems, getItem, commitRun, recordEvents, loadChanges, search, loadDeals, saveDeals, loadFree, saveFree, DIR };
