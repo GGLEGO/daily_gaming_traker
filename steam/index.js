@@ -12,7 +12,7 @@ const COOKIE = 'birthtime=0; lastagecheckage=1-0-1990; wants_mature_content=1; S
 const GENRES = [
   { id: 'fps', label: 'FPS', desc: '슈팅', tags: [1663] },
   { id: 'rpg', label: 'RPG', desc: 'MMORPG · 액션 RPG', tags: [122] },
-  { id: 'aos', label: 'AOS', desc: 'MOBA · 전략', tags: [1718, 9] },
+  { id: 'aos', label: 'AOS', desc: 'MOBA', tags: [1718] },
   { id: 'sports', label: '스포츠', desc: '스포츠', tags: [701] },
 ];
 
