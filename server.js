@@ -8,6 +8,7 @@ const { storage } = require('./base');
 const harness = require('./harness'); // 수정 이력 응답 가공
 const scheduler = require('./scheduler'); // 24시간 스케줄러 (scheduler/ 폴더)
 const steam = require('./steam'); // Steam 할인 수집기 (steam/ 폴더)
+const steamFree = require('./steam/free'); // Steam 무료 게임 목록 (steam/free/, SQL 테이블)
 const streams = require('./stream'); // 실시간 방송 수집기 (stream/ 폴더)
 const esports = require('./scheduler/esports'); // 대회·리그·경기 일정 수집기 (scheduler/ 폴더);
 const { createChatRouter } = require('./chatbot');
@@ -63,9 +64,9 @@ app.get('/api/deals', wrap(async (req, res) => {
   try { res.json(await steam.loadDealsWithPlayers()); } catch (e) { res.json(await steam.loadDeals()); }
 }));
 
-// Steam 무료 게임 목록 (장르별 인기순, /free 페이지용)
+// Steam 무료 게임 목록 (장르별 인기순, /free 페이지용) - steam/free 모듈(SQL 테이블)
 app.get('/api/free-games', wrap(async (req, res) => {
-  res.json(await steam.loadFree());
+  res.json(await steamFree.load());
 }));
 
 // 실시간 스트리머 방송 (SOOP + 치지직, 시청자순 5개씩)

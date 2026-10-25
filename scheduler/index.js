@@ -3,6 +3,7 @@
 const cron = require('node-cron');
 const { AGENTS, GAME_IDS } = require('../game/index');
 const steam = require('../steam');
+const steamFree = require('../steam/free');
 const { log } = require('../base');
 
 const CRON = process.env.PATCH_CHECK_CRON || '0 9 * * *';
@@ -17,7 +18,7 @@ async function runAll(reason = 'scheduled') {
   try {
     for (const g of GAME_IDS) state.lastResults[g] = await AGENTS[g].run({ reason });
     state.lastResults.steam = await steam.run();
-    state.lastResults.steamFree = await steam.runFree();
+    state.lastResults.steamFree = await steamFree.collect();
     state.lastRunAt = new Date().toISOString();
   } finally {
     state.running = false;
@@ -28,7 +29,7 @@ async function runAll(reason = 'scheduled') {
 function start({ runOnStart = true } = {}) {
   if (!cron.validate(CRON)) throw new Error(`잘못된 CRON 표현식: ${CRON}`);
   cron.schedule(CRON, () => runAll('cron'), { timezone: TZ });
-  cron.schedule(STEAM_CRON, () => { steam.run(); steam.runFree(); }, { timezone: TZ });
+  cron.schedule(STEAM_CRON, () => { steam.run(); steamFree.collect(); }, { timezone: TZ });
   log('scheduler', `스케줄 등록: "${CRON}" (${TZ}) - 24시간 주기, Steam 할인 "${STEAM_CRON}"`);
   if (runOnStart) setTimeout(() => runAll('startup').catch((e) => log('scheduler', e.message)), 1000);
 }
