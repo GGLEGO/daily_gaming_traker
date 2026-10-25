@@ -154,10 +154,8 @@ CREATE TABLE IF NOT EXISTS app_state (
   PRIMARY KEY (name)
 ) ENGINE=InnoDB COMMENT='패치 외 수집 결과 (JSON)';
 
--- Steam 무료 게임 목록 (장르별 인기순 상위 10개). steam/free/ 가 채운다. (정의 원본: steam/free/schema.sql)
+-- Steam 무료 게임 (장르 교차 필터용). steam/free/ 가 채운다. (정의 원본: steam/free/schema.sql)
 CREATE TABLE IF NOT EXISTS steam_free_games (
-  genre        VARCHAR(16)  NOT NULL COMMENT '장르 id (coop, rpg, puzzle, racing, aos, card, fps)',
-  rank_no      TINYINT UNSIGNED NOT NULL COMMENT '장르 내 인기 순위 (1부터)',
   appid        VARCHAR(16)  NOT NULL,
   name         VARCHAR(300) NOT NULL,
   url          VARCHAR(500) NOT NULL,
@@ -167,9 +165,11 @@ CREATE TABLE IF NOT EXISTS steam_free_games (
   review_text  VARCHAR(100) NULL,
   released     VARCHAR(60)  NULL,
   players      INT UNSIGNED NULL COMMENT '동시 접속자 수 (수집 시점)',
+  genres       VARCHAR(120) NOT NULL COMMENT '속한 장르 id CSV (coop,fps ...)',
+  pop_rank     SMALLINT UNSIGNED NOT NULL COMMENT '전체 인기 순위 (1부터)',
   updated_at   DATETIME(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (genre, rank_no)
-) ENGINE=InnoDB COMMENT='Steam 무료 게임 장르별 목록';
+  PRIMARY KEY (appid)
+) ENGINE=InnoDB COMMENT='Steam 무료 게임 (장르 교차 필터)';
 
 -- ---------------------------------------------------------------------
 -- 6. 뷰: API 가 바로 쓰는 모양

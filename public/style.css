@@ -498,3 +498,14 @@ img { max-width: 100%; height: auto; }
 .free-name { font-weight: 800; font-size: 0.95rem; color: var(--ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .free-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.76rem; color: var(--muted); }
 .free-price { margin-top: auto; font-weight: 900; color: var(--g-700); font-size: 0.9rem; }
+
+/* /free 장르 교차 필터 */
+.free-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.free-filter { display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--g-800); font: inherit; font-weight: 800; font-size: 0.86rem; cursor: pointer; box-shadow: var(--shadow); transition: background .15s, color .15s, border-color .15s; }
+.free-filter span { font-size: 0.72rem; color: var(--muted); }
+.free-filter:hover { border-color: var(--g-600); }
+.free-filter.on { background: var(--g-700); border-color: var(--g-700); color: #fff; }
+.free-filter.on span { color: rgba(255,255,255,.8); }
+.free-filter-clear { border-style: dashed; color: var(--muted); font-weight: 700; }
+.free-gtags { display: flex; flex-wrap: wrap; gap: 4px; }
+.free-gtag { font-size: 0.68rem; font-weight: 800; color: var(--g-700); background: var(--g-100); border-radius: 4px; padding: 1px 6px; }

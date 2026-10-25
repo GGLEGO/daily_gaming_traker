@@ -413,34 +413,56 @@
     box.hidden = false;
   }
 
-  // ---------- Steam 무료 게임 목록 (/free 페이지) ----------
-  function freeCard(it, i) {
-    const img = it.capsule || it.image;
-    const players = typeof it.players === 'number' ? `👥 ${it.players.toLocaleString('ko-KR')}` : '';
-    return `<a class="free-card" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">
-        <span class="free-rank">${i + 1}</span>
-        <div class="free-thumb"><img src="${esc(img)}" alt="" loading="lazy"${it.capsule && it.image ? ` onerror="this.onerror=null;this.src='${esc(it.image)}'"` : ''}></div>
-        <div class="free-body">
-          <span class="free-name">${esc(it.name)}</span>
-          <span class="free-meta">${it.reviewText ? `<span class="deal-review-${esc(it.review || 'mixed')}">${esc(it.reviewText)}</span>` : ''}${players ? `<span>${players}</span>` : ''}${it.released ? `<span>${esc(it.released)}</span>` : ''}</span>
-          <span class="free-price">무료</span>
-        </div>
-      </a>`;
-  }
+  // ---------- Steam 무료 게임 목록 + 장르 교차 필터 (/free 페이지) ----------
   async function renderFreeGames() {
-    const box = $('#free-sections');
-    const tabs = $('#free-tabs');
-    if (!box) return;
+    const grid = $('#free-grid');
+    const filters = $('#free-filters');
+    const countEl = $('#free-count');
+    if (!grid) return;
     let data;
-    try { data = await getJSON('/api/free-games'); } catch (e) { box.innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
-    const genres = (data.genres || []).filter((g) => g.items && g.items.length);
-    if (!genres.length) { box.innerHTML = '<div class="empty">아직 수집된 무료 게임이 없습니다. 잠시 후 다시 확인해 주세요.</div>'; return; }
-    if (tabs) tabs.innerHTML = genres.map((g) => `<a class="free-tab" href="#free-${esc(g.id)}">${esc(g.label)}<span>${g.items.length}</span></a>`).join('');
-    box.innerHTML = genres.map((g) => `
-      <section class="free-genre" id="free-${esc(g.id)}">
-        <div class="section-head"><h2 class="section-title">${esc(g.label)}</h2><p class="section-desc">인기순 ${g.items.length}개</p></div>
-        <div class="free-grid">${g.items.map((it, i) => freeCard(it, i)).join('')}</div>
-      </section>`).join('');
+    try { data = await getJSON('/api/free-games'); } catch (e) { grid.innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
+    const genres = data.genres || [];
+    const games = data.games || [];
+    const label = Object.fromEntries(genres.map((g) => [g.id, g.label]));
+    if (!games.length) { grid.innerHTML = '<div class="empty">아직 수집된 무료 게임이 없습니다. 잠시 후 다시 확인해 주세요.</div>'; return; }
+
+    const active = new Set(); // 선택된 장르 (교집합 AND 필터)
+    const drawFilters = () => {
+      filters.innerHTML = genres.map((g) => {
+        const n = games.filter((it) => it.genres.includes(g.id)).length;
+        return `<button type="button" class="free-filter${active.has(g.id) ? ' on' : ''}" data-g="${esc(g.id)}">${esc(g.label)}<span>${n}</span></button>`;
+      }).join('') + (active.size ? '<button type="button" class="free-filter free-filter-clear" data-g="">전체</button>' : '');
+    };
+    const freeCardGenres = (it) => it.genres.map((id) => `<span class="free-gtag">${esc(label[id] || id)}</span>`).join('');
+    const draw = () => {
+      const sel = [...active];
+      const list = games.filter((it) => sel.every((id) => it.genres.includes(id)));
+      countEl.textContent = active.size ? `${sel.map((id) => label[id]).join(' + ')} · ${list.length}개` : `전체 ${list.length}개 (인기순)`;
+      grid.innerHTML = list.length
+        ? list.map((it, i) => `<a class="free-card" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">
+            <span class="free-rank">${i + 1}</span>
+            <div class="free-thumb"><img src="${esc(it.capsule || it.image)}" alt="" loading="lazy"${it.capsule && it.image ? ` onerror="this.onerror=null;this.src='${esc(it.image)}'"` : ''}></div>
+            <div class="free-body">
+              <span class="free-name">${esc(it.name)}</span>
+              <span class="free-gtags">${freeCardGenres(it)}</span>
+              <span class="free-meta">${it.reviewText ? `<span class="deal-review-${esc(it.review || 'mixed')}">${esc(it.reviewText)}</span>` : ''}${typeof it.players === 'number' ? `<span>👥 ${it.players.toLocaleString('ko-KR')}</span>` : ''}</span>
+              <span class="free-price">무료</span>
+            </div>
+          </a>`).join('')
+        : '<div class="empty">선택한 장르를 모두 만족하는 무료 게임이 없습니다.</div>';
+    };
+    filters.addEventListener('click', (ev) => {
+      const b = ev.target.closest('.free-filter');
+      if (!b) return;
+      const id = b.dataset.g;
+      if (!id) active.clear();            // "전체"
+      else if (active.has(id)) active.delete(id);
+      else active.add(id);
+      drawFilters();
+      draw();
+    });
+    drawFilters();
+    draw();
     const foot = $('#free-foot');
     if (foot) foot.innerHTML = `${data.updatedAt ? `갱신 ${relTime(data.updatedAt)} · ` : ''}출처 <a href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">Steam ↗</a>`;
   }
