@@ -23,10 +23,9 @@
             '<script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>'
     },
     'home-left': {
-      // 홈 왼쪽 세로(스카이스크래퍼) 광고 자리. 세로형 광고 단위를 만들어 data-ad-slot 을 넣고 enabled 를 true 로.
-      enabled: false,
-      html: '<ins class="adsbygoogle" style="display:block;width:160px;height:600px" data-ad-client="' + ADSENSE_CLIENT + '" data-ad-slot="0000000000"></ins>' +
-            '<script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>'
+      // 홈 왼쪽 세로 광고 자리. 현재 쿠팡 파트너스 배너 사용.
+      enabled: true,
+      html: '<iframe src="https://coupa.ng/cqrhf4" width="120" height="240" frameborder="0" scrolling="no" referrerpolicy="unsafe-url"></iframe>'
     }
     // 새 자리(예: 'in-article')가 필요하면 같은 형식으로 추가하고, 페이지에 data-ad="in-article" 슬롯을 둔다
   };

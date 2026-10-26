@@ -53,13 +53,13 @@
 .home-main { min-width: 0; }
 .home-rail { display: none; }                 /* 기본(좁은 화면)엔 숨김 */
 .ad-slot-vertical .ad-placeholder { min-height: 540px; }  /* 세로로 긴 흰색 직사각형 (600→540, 10%↓) */
-@media (min-width: 1500px) {
+@media (min-width: 1440px) {
   /* 레일은 스팀 배너 상단(밤색 바 아래)부터 본문 끝까지를 차지 → 위는 밤색 상단, 아래는 푸터를 넘지 않는다 */
   .home-rail {
     display: block;
     position: absolute; top: 0; bottom: 0;
-    left: calc((100vw - 1140px) / 2 - 176px);  /* 1140px 컨테이너 왼쪽 바깥 여백 */
-    width: 160px;
+    left: calc((100vw - 1140px) / 2 - 140px);  /* 1140px 컨테이너 왼쪽 바깥 여백 */
+    width: 120px;
   }
   /* 안쪽 광고는 sticky 로 스크롤을 따라오되, 레일 끝(본문 끝)에서 멈춰 푸터를 가리지 않는다 */
   .home-rail-inner { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 6px; }
