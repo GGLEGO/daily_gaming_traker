@@ -46,6 +46,6 @@
 .dgt-chat-send:disabled { opacity: .5; cursor: default; }
 .dgt-chat-foot { padding: 6px 12px 8px; font-size: 0.7rem; color: var(--muted, #6b8070); background: #fff; text-align: center; }
 @media (max-width: 480px) {
-  #dgt-chat { right: 8px; bottom: 72px; width: calc(100vw - 16px); height: calc(100vh - 90px); border-radius: 14px; }
+  #dgt-chat { right: 8px; bottom: 72px; width: calc(100vw - 16px); height: calc(100vh - 120px); border-radius: 14px; }
   #dgt-chat-btn { right: 12px; bottom: 12px; padding: 11px 14px; }
 }

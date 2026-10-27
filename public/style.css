@@ -426,8 +426,8 @@ img { max-width: 100%; height: auto; }
   .patch-head, .patch-body { padding-left: 16px; padding-right: 16px; }
   .patch-body .default-2-col { grid-template-columns: 1fr; }
   .topbar-inner { font-size: 0.72rem; }
-  .brand-logo-wrap { --lh: 135px; }
-  .masthead-compact .brand-logo-wrap { --lh: 135px; }
+  .brand-logo-wrap { --lh: 165px; }
+  .masthead-compact .brand-logo-wrap { --lh: 165px; }
 }
 
 /* 패치 수정 반영 표시 */
