@@ -112,7 +112,7 @@
   }
 
   function autosize() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
-  function open() { panel.hidden = false; btn.classList.add('open'); renderHistory(); setTimeout(() => input.focus(), 50); }
+  function open() { panel.hidden = false; btn.classList.add('open'); renderHistory(); } // 열 때 자동 포커스 안 함 (입력창을 눌러야 자판이 올라옴)
   function close() { panel.hidden = true; btn.classList.remove('open'); }
 
   btn.addEventListener('click', () => (panel.hidden ? open() : close()));
