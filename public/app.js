@@ -310,7 +310,8 @@
     };
     tabs.addEventListener('click', (ev) => { const t = ev.target.closest('.streams-tab'); if (t) show(t.dataset.game); });
     // 칼럼 헤더(예: SOOP)를 누르면 방송인 목록이 부드럽게 접혔다 펼쳐진다
-    const toggleHead = (head) => { const col = head.parentElement; const open = col.classList.toggle('collapsed'); head.setAttribute('aria-expanded', open ? 'false' : 'true'); };
+    // 접기 토글은 모바일(≤640px)에서만 동작한다 (PC 에서는 항상 펼쳐 둠)
+    const toggleHead = (head) => { if (!window.matchMedia('(max-width: 640px)').matches) return; const col = head.parentElement; const open = col.classList.toggle('collapsed'); head.setAttribute('aria-expanded', open ? 'false' : 'true'); };
     panel.addEventListener('click', (ev) => { const head = ev.target.closest('.streams-col-toggle'); if (head) toggleHead(head); });
     panel.addEventListener('keydown', (ev) => { if (ev.key !== 'Enter' && ev.key !== ' ') return; const head = ev.target.closest('.streams-col-toggle'); if (head) { ev.preventDefault(); toggleHead(head); } });
     show(current);

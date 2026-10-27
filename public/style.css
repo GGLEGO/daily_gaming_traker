@@ -533,12 +533,18 @@ img { max-width: 100%; height: auto; }
 }
 
 /* 방송 칼럼 헤더 토글 (SOOP·치지직 등): 눌러서 방송인 목록을 부드럽게 접고 편다 */
-.streams-col-toggle { cursor: pointer; user-select: none; }
-.streams-col-head .col-caret { margin-left: 8px; color: var(--muted); font-size: 0.8rem; transition: transform .3s ease; }
-.streams-col.collapsed .col-caret { transform: rotate(-90deg); }
-.streams-col-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .32s ease; }
-.streams-col-body > * { overflow: hidden; min-height: 0; }
-.streams-col.collapsed .streams-col-body { grid-template-rows: 0fr; }
+/* PC: 방송인 목록은 항상 펼쳐 둔다 (접기 토글·화살표 없음) */
+.col-caret { display: none; }
+.streams-col-body { display: block; }
+/* 모바일에서만 칼럼 헤더 탭으로 방송인 목록을 부드럽게 접고 편다 */
+@media (max-width: 640px) {
+  .streams-col-toggle { cursor: pointer; user-select: none; }
+  .col-caret { display: inline-block; margin-left: 8px; color: var(--muted); font-size: 0.8rem; transition: transform .3s ease; }
+  .streams-col.collapsed .col-caret { transform: rotate(-90deg); }
+  .streams-col-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .32s ease; }
+  .streams-col-body > * { overflow: hidden; min-height: 0; }
+  .streams-col.collapsed .streams-col-body { grid-template-rows: 0fr; }
+}
 
 /* 검색 버튼 돋보기 아이콘 (버튼 글꼴색과 동일 = currentColor) */
 .search-btn { display: inline-flex; align-items: center; justify-content: center; }
