@@ -523,3 +523,11 @@ img { max-width: 100%; height: auto; }
   .lp-card .lp-body { padding: 14px 12px; justify-content: center; }
   .lp-card .lp-game { font-size: 0.95rem; color: var(--ink); gap: 7px; }
 }
+
+/* 모바일: 방송 게임 탭을 3열 그리드로 (11개 → 4줄, 5줄 안에 정렬) */
+@media (max-width: 640px) {
+  .streams-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .streams-tab { justify-content: center; gap: 5px; padding: 7px 6px; font-size: 0.78rem; min-width: 0; }
+  .streams-tab span:not(.gmark):not(.game-btn-mark) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .streams-tab .gmark-img { width: 18px; height: 18px; }
+}
