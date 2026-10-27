@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 const { fetchText, log } = require('../base');
 
 const TTL_MS = 30 * 60 * 1000;
-const LIMIT = 20;
+const LIMIT = 10;
 const EXCLUDE = '-포커 -카지노 -토토 -슬롯 -바카라 -경마';
 
 // 뉴스 분류와 구글 뉴스 검색어 (OR 로 묶은 키워드)
