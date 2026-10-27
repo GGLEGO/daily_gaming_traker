@@ -84,7 +84,7 @@ img { max-width: 100%; height: auto; }
 /* ---- 검색창 ---- */
 .search-form { display: flex; align-items: stretch; flex: 1 1 320px; max-width: 460px; min-width: 0; }
 .search-input {
-  flex: 1; min-width: 0; padding: 11px 16px; font: inherit; font-size: 0.95rem;
+  flex: 1; min-width: 0; padding: 11px 16px; font: inherit; font-size: 0.89rem;
   color: #fff; background: #241611; border: 1.5px solid #3a2416; border-right: none; border-radius: 10px 0 0 10px; outline: none;
 }
 .search-input::placeholder { color: #a08a78; }
@@ -516,7 +516,7 @@ img { max-width: 100%; height: auto; }
 /* 모바일 조정 */
 @media (max-width: 640px) {
   /* 스팀 인기 할인 블록 양옆 여백 (화면 끝에 꽉 붙지 않게) */
-  .deals.deals-top { margin-left: 5px; margin-right: 5px; }
+  .deals.deals-top { margin-left: 8px; margin-right: 8px; }
   /* 최신 패치 노트: 아이콘+게임명만 담은 흰색 둥근 사각형 */
   .lp-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .lp-card .lp-thumb, .lp-card .lp-title, .lp-card .lp-date, .lp-card .lp-flag { display: none; }
