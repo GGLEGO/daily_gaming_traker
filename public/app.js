@@ -171,6 +171,29 @@
     box.addEventListener('mouseenter', () => { hovering = true; stop(); });
     box.addEventListener('mouseleave', () => { hovering = false; play(); });
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
+
+    // 드래그/스와이프로 슬라이드 넘기기 (마우스·터치 공통, pointer 이벤트)
+    const vp = box.querySelector('.deals-viewport');
+    let dragX = null, dragging = false, moved = 0;
+    vp.addEventListener('pointerdown', (e) => { dragX = e.clientX; dragging = true; moved = 0; stop(); track.style.transition = 'none'; });
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      moved = e.clientX - dragX;
+      track.style.transform = `translateX(calc(-${idx * 100}% + ${moved}px))`;
+    });
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.style.transition = '';
+      if (Math.abs(moved) > 40) go(idx + (moved < 0 ? 1 : -1));
+      else go(idx);
+      play();
+    };
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    // 드래그한 경우 슬라이드 안의 링크 클릭이 열리지 않도록 막는다
+    vp.addEventListener('click', (e) => { if (Math.abs(moved) > 5) { e.preventDefault(); e.stopPropagation(); } }, true);
+
     showGenre(genres[0].id);
 
     // 자동 갱신: 5분마다 할인 데이터(접속자 수 등)를 다시 받아 보던 장르·위치를 유지한 채 갱신한다
