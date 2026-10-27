@@ -539,3 +539,7 @@ img { max-width: 100%; height: auto; }
 .streams-col-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .32s ease; }
 .streams-col-body > * { overflow: hidden; min-height: 0; }
 .streams-col.collapsed .streams-col-body { grid-template-rows: 0fr; }
+
+/* 검색 버튼 돋보기 아이콘 (버튼 글꼴색과 동일 = currentColor) */
+.search-btn { display: inline-flex; align-items: center; justify-content: center; }
+.search-ico { display: block; }
