@@ -515,8 +515,8 @@ img { max-width: 100%; height: auto; }
 
 /* 모바일 조정 */
 @media (max-width: 640px) {
-  /* 스팀 인기 할인 블록 양옆을 2px씩 띄움 (화면 끝에 꽉 붙지 않게) */
-  .deals.deals-top { margin-left: 2px; margin-right: 2px; }
+  /* 스팀 인기 할인 블록 양옆 여백 (화면 끝에 꽉 붙지 않게) */
+  .deals.deals-top { margin-left: 5px; margin-right: 5px; }
   /* 최신 패치 노트: 아이콘+게임명만 담은 흰색 둥근 사각형 */
   .lp-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .lp-card .lp-thumb, .lp-card .lp-title, .lp-card .lp-date, .lp-card .lp-flag { display: none; }
@@ -531,3 +531,11 @@ img { max-width: 100%; height: auto; }
   .streams-tab span:not(.gmark):not(.game-btn-mark) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .streams-tab .gmark-img { width: 18px; height: 18px; }
 }
+
+/* 방송 칼럼 헤더 토글 (SOOP·치지직 등): 눌러서 방송인 목록을 부드럽게 접고 편다 */
+.streams-col-toggle { cursor: pointer; user-select: none; }
+.streams-col-head .col-caret { margin-left: 8px; color: var(--muted); font-size: 0.8rem; transition: transform .3s ease; }
+.streams-col.collapsed .col-caret { transform: rotate(-90deg); }
+.streams-col-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .32s ease; }
+.streams-col-body > * { overflow: hidden; min-height: 0; }
+.streams-col.collapsed .streams-col-body { grid-template-rows: 0fr; }

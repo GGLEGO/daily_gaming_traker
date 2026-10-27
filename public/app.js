@@ -278,12 +278,15 @@
       const err = data.errors && data.errors[p.key];
       return `
         <div class="streams-col">
-          <div class="streams-col-head">
+          <div class="streams-col-head streams-col-toggle" role="button" tabindex="0" aria-expanded="true">
             <span class="streams-col-title"><span class="platform-mark platform-${p.key}">${p.mark}</span>${p.label} · ${esc(data.label)}</span>
             <span class="streams-col-meta">시청자순 TOP ${list.length || 5}</span>
+            <span class="col-caret" aria-hidden="true">▾</span>
           </div>
-          ${list.length ? `<ul class="stream-list">${list.map((s, i) => streamRow(s, i, !!data.showCategory)).join('')}</ul>`
-            : `<div class="streams-empty">${err ? '방송 정보를 가져오지 못했습니다.' : '지금 방송 중인 스트리머가 없습니다.'}</div>`}
+          <div class="streams-col-body">
+            ${list.length ? `<ul class="stream-list">${list.map((s, i) => streamRow(s, i, !!data.showCategory)).join('')}</ul>`
+              : `<div class="streams-empty">${err ? '방송 정보를 가져오지 못했습니다.' : '지금 방송 중인 스트리머가 없습니다.'}</div>`}
+          </div>
         </div>`;
     }).join('') + (es ? esportsColumn(es) : '') + `<div class="streams-foot"><span>갱신 ${relTime(data.fetchedAt)} · 2분마다 새로 고칩니다</span><span>${PLATFORMS.map((p) => `<a href="${p.home}" target="_blank" rel="noopener noreferrer">${p.label} ↗</a>`).join(' · ')}</span></div>`;
   }
@@ -306,6 +309,10 @@
       renderStreamsPanel(panel, id);
     };
     tabs.addEventListener('click', (ev) => { const t = ev.target.closest('.streams-tab'); if (t) show(t.dataset.game); });
+    // 칼럼 헤더(예: SOOP)를 누르면 방송인 목록이 부드럽게 접혔다 펼쳐진다
+    const toggleHead = (head) => { const col = head.parentElement; const open = col.classList.toggle('collapsed'); head.setAttribute('aria-expanded', open ? 'false' : 'true'); };
+    panel.addEventListener('click', (ev) => { const head = ev.target.closest('.streams-col-toggle'); if (head) toggleHead(head); });
+    panel.addEventListener('keydown', (ev) => { if (ev.key !== 'Enter' && ev.key !== ' ') return; const head = ev.target.closest('.streams-col-toggle'); if (head) { ev.preventDefault(); toggleHead(head); } });
     show(current);
     setInterval(() => { if (!document.hidden) renderStreamsPanel(panel, current); }, 2 * 60 * 1000);
   }
