@@ -516,7 +516,8 @@ img { max-width: 100%; height: auto; }
 /* 모바일 조정 */
 @media (max-width: 640px) {
   /* 스팀 인기 할인 블록 양옆 여백 (화면 끝에 꽉 붙지 않게) */
-  .deals.deals-top { margin-left: 10.5px; margin-right: 10.5px; }
+  /* 아래 게임 카드(본문)와 좌우 선을 맞춤: 컨테이너 안쪽 여백 16px 과 동일 */
+  .deals.deals-top { margin-left: 16px; margin-right: 16px; }
   /* 최신 패치 노트: 아이콘+게임명만 담은 흰색 둥근 사각형 */
   .lp-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .lp-card .lp-thumb, .lp-card .lp-title, .lp-card .lp-date, .lp-card .lp-flag { display: none; }
